@@ -6,7 +6,7 @@ use App\Mail\EmptyWalletReminder;
 use App\Mail\MerchantInvoice;
 use App\Mail\ZoodpayCsvExport;
 use App\Models\Agencies;
-use App\Models\Customer;
+use App\Models\Employee;
 use PDF;
 use Carbon\Carbon;
 use App\Models\User;

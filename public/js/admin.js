@@ -67183,131 +67183,31 @@ App.Auth = {
 
 /***/ }),
 
-/***/ "./resources/js/custom/features/closet.js":
-/*!************************************************!*\
-  !*** ./resources/js/custom/features/closet.js ***!
-  \************************************************/
+/***/ "./resources/js/custom/features/company.js":
+/*!*************************************************!*\
+  !*** ./resources/js/custom/features/company.js ***!
+  \*************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-App.Closet = {
+App.Company = {
   countIds: [],
   initializeValidations: function initializeValidations() {
     $("#search-form").validate();
   },
   removeFilters: function removeFilters(id) {
-    $("#closet_reference").val("");
-    $("#closet_name").val("");
+    $("#office_reference").val("");
+    $("#office_name").val("");
     App.Helpers.removeAllfilters(id);
   },
   removeSelectionFilters: function removeSelectionFilters() {
     $("#customer").val("");
-    $("#closet_name").val('').trigger('change');
+    $("#office_name").val('').trigger('change');
     App.Helpers.oTable.draw();
   },
-  closetTrendingModal: function closetTrendingModal(closetRef, statusTitle, status) {
-    var customerStatusValue = statusTitle;
-    if (status == 1) {
-      var action = function action(inputValue) {
-        if (inputValue === null) return false;
-        if (inputValue === "") {
-          swal.showInputError("You need to write something!");
-          return false;
-        }
-        var onSuccess = function onSuccess(response) {
-          App.Helpers.oTable.draw();
-          swal.close();
-        };
-        var requestData = {
-          'ref': closetRef,
-          'is_trending': status,
-          'position': inputValue
-        };
-        var url = App.Helpers.generateApiURL(App.Constants.endPoints.updateClosetTrendingStatus);
-        App.Ajax.post(url, requestData, onSuccess, false, '', 0);
-      };
-      App.Helpers.confirmWithInput('Are you sure?', 'You want to mark selected closet trending status as ' + customerStatusValue.toUpperCase() + '. Kindly add your desired trending closet position below ', action);
-    } else {
-      var _action = function _action(isConfirm) {
-        if (isConfirm) {
-          var onSuccess = function onSuccess(response) {
-            App.Helpers.oTable.draw("closet_table");
-            swal.close();
-          };
-          var requestData = {
-            'ref': closetRef,
-            'is_trending': status
-          };
-          var url = App.Helpers.generateApiURL(App.Constants.endPoints.updateClosetTrendingStatus);
-          App.Ajax.post(url, requestData, onSuccess, false, '', 0);
-        }
-      };
-      App.Helpers.confirm('You want to mark selected closet trending status as' + customerStatusValue.toUpperCase() + '.', _action);
-    }
-  },
-  closetProductViewModal: function closetProductViewModal(element, id) {
-    var data = $(element).attr('text');
-    var modelTitle = $(element).attr('title');
-    var modelSubmitBtnTheme = $(element).attr('submitTheme');
-    var modelSubmitBtnText = $(element).attr('submitText');
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.getClosetsProductDetail + id);
-    $("#customModalWrapperLabel").html(modelTitle + " Details");
-    var onSuccess = function onSuccess(data) {
-      var initialDiv = $("#customModalWrapper div.modal-dialog div.modal-content div.modal-body");
-      initialDiv.empty();
-      initialDiv.append(data);
-    };
-    var requestData = {};
-    App.Ajax.get(url, requestData, onSuccess, false, "ignoreSuccessFormatting");
-    var footerSubmitDiv = $("#customModalWrapper").children().children().children('.modal-footer').children('#customModalWrapperSubmitBtn');
-    footerSubmitDiv.empty();
-    footerSubmitDiv.append(modelSubmitBtnText);
-    footerSubmitDiv.removeClass("btn-primary");
-    footerSubmitDiv.addClass(modelSubmitBtnTheme);
-  },
-  closetProductChangeStatusModal: function closetProductChangeStatusModal(handle, statusTitle, status) {
-    var customerStatusValue = statusTitle;
-    var action = function action(isConfirm) {
-      if (isConfirm) {
-        var onSuccess = function onSuccess(response) {
-          App.Helpers.oTable.draw("products_table");
-          swal.close();
-        };
-        var requestData = {
-          'handle': handle,
-          'status': status
-        };
-        var url = App.Helpers.generateApiURL(App.Constants.endPoints.updateClosetProductStatus);
-        App.Ajax.post(url, requestData, onSuccess, false, '', 0);
-      }
-    };
-    App.Helpers.confirm('You want to changed selected product status as ' + customerStatusValue.toUpperCase() + '.', action);
-  },
-  closetProductMarkFeaturedModal: function closetProductMarkFeaturedModal(handle, statusTitle, status) {
-    var customerStatusValue = statusTitle;
-    var action = function action(inputValue) {
-      if (inputValue === null) return false;
-      if (inputValue === "") {
-        swal.showInputError("You need to write something!");
-        return false;
-      }
-      var onSuccess = function onSuccess(response) {
-        App.Helpers.oTable.draw();
-        swal.close();
-      };
-      var requestData = {
-        'handle': handle,
-        'is_featured': status,
-        'position': inputValue
-      };
-      var url = App.Helpers.generateApiURL(App.Constants.endPoints.updateClosetProductFeaturedStatus);
-      App.Ajax.post(url, requestData, onSuccess, false, '', 0);
-    };
-    App.Helpers.confirmWithInput('Are you sure?', 'You want to mark selected product featured status as ' + customerStatusValue.toUpperCase() + '. Kindly add your desired featured position below ', action);
-  },
   initializeDataTable: function initializeDataTable() {
-    var table_name = "closet_table";
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.getClosets);
+    var table_name = "company_table";
+    var url = App.Helpers.generateApiURL(App.Constants.endPoints.getCompanies);
     var sortColumn = [[2, "desc"]];
     var columns = [{
       data: 'show',
@@ -67318,33 +67218,18 @@ App.Closet = {
     },
     // {data: "id", name: "id", orderable: true, searchable: true},
     {
-      data: "closet_name",
-      name: "closet_name",
+      data: "name",
+      name: "name",
       orderable: true,
       searchable: true
     }, {
-      data: "customer_name",
-      name: "customer_name",
+      data: "domain",
+      name: "domain",
       orderable: true,
       searchable: true
     }, {
-      data: "closet_reference",
-      name: "closet_reference",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "logo",
-      name: "logo",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "banner",
-      name: "banner",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "trending",
-      name: "trending",
+      data: "reference",
+      name: "reference",
       orderable: true,
       searchable: true
     }, {
@@ -67364,16 +67249,17 @@ App.Closet = {
       searchable: true
     }];
     var postData = function postData(d) {
-      d.closet_name = $("#closet_name").val();
-      d.closet_reference = $("#closet_reference").val();
+      d.name = $("#name").val();
+      d.reference = $("#reference").val();
+      d.domain = $("#domain").val();
     };
     var orderColumn = sortColumn;
     var searchEnabled = true;
     App.Helpers.CreateDataTableIns(table_name, url, columns, postData, searchEnabled, orderColumn, [], true);
   },
-  initializeClosetProductsDataTable: function initializeClosetProductsDataTable(ref) {
-    var table_name = "products_table";
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.getClosetsProducts) + ref;
+  initializeCompanyEmployeeDataTable: function initializeCompanyEmployeeDataTable(ref) {
+    var table_name = "office_employees_table";
+    var url = App.Helpers.generateApiURL(App.Constants.endPoints.getCompanyAllEmployees) + "/" + ref;
     var sortColumn = [[2, "desc"]];
     var columns = [{
       data: 'check',
@@ -67387,72 +67273,42 @@ App.Closet = {
       orderable: true,
       searchable: true
     }, {
-      data: "bs_category",
-      name: "bs_category",
+      data: "username",
+      name: "username",
       orderable: true,
       searchable: false
     }, {
-      data: "category_name",
-      name: "category_name",
+      data: "email",
+      name: "email",
       orderable: true,
       searchable: false
     }, {
-      data: "price",
-      name: "price",
+      data: "phone",
+      name: "phone",
       orderable: true,
       searchable: true
     }, {
-      data: "discounted_price",
-      name: "discounted_price",
+      data: "country",
+      name: "country",
       orderable: true,
       searchable: true
-    }, {
-      data: "quantity",
-      name: "quantity",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "image",
-      name: "image",
-      orderable: true,
-      searchable: false
-    }, {
-      data: "shipping_price",
-      name: "shipping_price",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "is_featured",
-      name: "is_featured",
-      orderable: true,
-      searchable: false
     }, {
       data: "status",
       name: "status",
-      orderable: true,
-      searchable: false
-    }, {
-      data: "created_at",
-      name: "created_at",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "updated_at",
-      name: "updated_at",
       orderable: true,
       searchable: true
     }];
     var postData = function postData(d) {
       // d.customer = $("#customer").val();
-      // d.closet_name = $("#closet_name").val();
+      // d.office_name = $("#office_name").val();
     };
     var orderColumn = sortColumn;
     var searchEnabled = true;
     App.Helpers.CreateDataTableIns(table_name, url, columns, postData, searchEnabled, orderColumn, [], true);
   },
-  initializeClosetCustomerDataTable: function initializeClosetCustomerDataTable(ref) {
-    var table_name = "closet_customers_table";
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.getClosetsProducts) + ref;
+  initializeCompanyOfficeDataTable: function initializeCompanyOfficeDataTable(ref) {
+    var table_name = "company_offices_table";
+    var url = App.Helpers.generateApiURL(App.Constants.endPoints.getCompanyAllOffices) + "/" + ref;
     var sortColumn = [[2, "desc"]];
     var columns = [{
       data: 'check',
@@ -67461,48 +67317,28 @@ App.Closet = {
       searchable: false,
       className: 'show'
     }, {
-      data: "name",
-      name: "name",
+      data: "office_name",
+      name: "office_name",
       orderable: true,
       searchable: true
     }, {
-      data: "bs_category",
-      name: "bs_category",
+      data: "office_reference",
+      name: "office_reference",
       orderable: true,
       searchable: false
     }, {
-      data: "category_name",
-      name: "category_name",
+      data: "about_office",
+      name: "about_office",
       orderable: true,
       searchable: false
-    }, {
-      data: "price",
-      name: "price",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "discounted_price",
-      name: "discounted_price",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "quantity",
-      name: "quantity",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "image",
-      name: "image",
-      orderable: true,
-      searchable: false
-    }, {
-      data: "shipping_price",
-      name: "shipping_price",
-      orderable: true,
-      searchable: true
     }, {
       data: "status",
       name: "status",
+      orderable: true,
+      searchable: false
+    }, {
+      data: "no_of_emp",
+      name: "no_of_emp",
       orderable: true,
       searchable: true
     }, {
@@ -67518,93 +67354,35 @@ App.Closet = {
     }];
     var postData = function postData(d) {
       // d.customer = $("#customer").val();
-      // d.closet_name = $("#closet_name").val();
+      // d.office_name = $("#office_name").val();
     };
     var orderColumn = sortColumn;
     var searchEnabled = true;
     App.Helpers.CreateDataTableIns(table_name, url, columns, postData, searchEnabled, orderColumn, [], true);
   },
-  initializeClosetOrdersDataTable: function initializeClosetOrdersDataTable(ref) {
-    var table_name = "closet_orders_table";
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.getClosetsProducts) + ref;
-    var sortColumn = [[2, "desc"]];
-    var columns = [{
-      data: 'check',
-      name: 'check',
-      orderable: false,
-      searchable: false,
-      className: 'show'
-    }, {
-      data: "name",
-      name: "name",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "bs_category",
-      name: "bs_category",
-      orderable: true,
-      searchable: false
-    }, {
-      data: "category_name",
-      name: "category_name",
-      orderable: true,
-      searchable: false
-    }, {
-      data: "price",
-      name: "price",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "discounted_price",
-      name: "discounted_price",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "quantity",
-      name: "quantity",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "image",
-      name: "image",
-      orderable: true,
-      searchable: false
-    }, {
-      data: "shipping_price",
-      name: "shipping_price",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "status",
-      name: "status",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "created_at",
-      name: "created_at",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "updated_at",
-      name: "updated_at",
-      orderable: true,
-      searchable: true
-    }];
-    var postData = function postData(d) {
-      // d.customer = $("#customer").val();
-      // d.closet_name = $("#closet_name").val();
-    };
-    var orderColumn = sortColumn;
-    var searchEnabled = true;
-    App.Helpers.CreateDataTableIns(table_name, url, columns, postData, searchEnabled, orderColumn, [], true);
+  createOfficeFormBinding: function createOfficeFormBinding() {
+    $("#create-user").bind("click", function (e) {
+      if ($("#company_create_form").valid()) {
+        var url = App.Helpers.generateApiURL(App.Constants.endPoints.createOffice);
+        var onSuccess = function onSuccess(data) {
+          console.log("success: ", data);
+          if (data.type == "success") {
+            window.location.href = '/office';
+            App.Helpers.showSuccessMessage(data.message);
+          }
+        };
+        var requestData = $("#company_create_form").serialize();
+        App.Ajax.post(url, requestData, onSuccess, false, {});
+      }
+    });
   },
-  editCustomerFormBinding: function editCustomerFormBinding(userId) {
+  editEmployeeFormBinding: function editEmployeeFormBinding(userId) {
     $("#customer-user").bind("click", function (e) {
-      if ($("#closet_edit_form").valid()) {
-        var url = App.Helpers.generateApiURL(App.Constants.endPoints.editCustomer + "/" + userId);
+      if ($("#office_edit_form").valid()) {
+        var url = App.Helpers.generateApiURL(App.Constants.endPoints.editEmployee + "/" + userId);
         var onSuccess = function onSuccess() {
           if (data.type == "success") {
-            window.location.href = '/closets';
+            window.location.href = '/offices';
             App.Helpers.showSuccessMessage(data.message);
           }
         };
@@ -67613,7 +67391,7 @@ App.Closet = {
       }
     });
   },
-  updateCustomerStatus: function updateCustomerStatus(thisKey, customerId) {
+  updateEmployeeStatus: function updateEmployeeStatus(thisKey, customerId) {
     var customerStatusValue = $(thisKey).find(':selected').text();
     var action = function action(isConfirm) {
       if (isConfirm) {
@@ -67623,7 +67401,7 @@ App.Closet = {
           'customer_status': customerStatus,
           'customer_id': customerId
         };
-        var url = App.Helpers.generateApiURL(App.Constants.endPoints.updateCustomerStatus);
+        var url = App.Helpers.generateApiURL(App.Constants.endPoints.updateEmployeeStatus);
         App.Ajax.post(url, requestData, onSuccess, false, '', 0);
       }
     };
@@ -67633,14 +67411,14 @@ App.Closet = {
 
 /***/ }),
 
-/***/ "./resources/js/custom/features/customers.js":
+/***/ "./resources/js/custom/features/employees.js":
 /*!***************************************************!*\
-  !*** ./resources/js/custom/features/customers.js ***!
+  !*** ./resources/js/custom/features/employees.js ***!
   \***************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-App.Customer = {
+App.Employee = {
   isAdmin: 0,
   countIds: [],
   initializeValidations: function initializeValidations() {
@@ -67668,8 +67446,8 @@ App.Customer = {
     App.Helpers.oTable.draw();
   },
   initializeDataTable: function initializeDataTable() {
-    var table_name = "customers_table";
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.getCustomers);
+    var table_name = "employees_table";
+    var url = App.Helpers.generateApiURL(App.Constants.endPoints.getEmployees);
     var sortColumn = [[2, "desc"]];
     var columns = [{
       data: 'show',
@@ -67743,13 +67521,13 @@ App.Customer = {
     var searchEnabled = true;
     App.Helpers.CreateDataTableIns(table_name, url, columns, postData, searchEnabled, orderColumn, [], true);
   },
-  editCustomerFormBinding: function editCustomerFormBinding(userId) {
+  editEmployeeFormBinding: function editEmployeeFormBinding(userId) {
     $("#customer-user").bind("click", function (e) {
       if ($("#customer_edit_form").valid()) {
-        var url = App.Helpers.generateApiURL(App.Constants.endPoints.editCustomer + "/" + userId);
+        var url = App.Helpers.generateApiURL(App.Constants.endPoints.editEmployee + "/" + userId);
         var onSuccess = function onSuccess() {
           if (data.type == "success") {
-            window.location.href = '/customers';
+            window.location.href = '/employees';
             App.Helpers.showSuccessMessage(data.message);
           }
         };
@@ -67758,7 +67536,7 @@ App.Customer = {
       }
     });
   },
-  updateCustomerStatus: function updateCustomerStatus(thisKey, customerId) {
+  updateEmployeeStatus: function updateEmployeeStatus(thisKey, customerId) {
     var customerStatusValue = $(thisKey).find(':selected').text();
     var action = function action(isConfirm) {
       if (isConfirm) {
@@ -67768,7 +67546,7 @@ App.Customer = {
           'customer_status': customerStatus,
           'customer_id': customerId
         };
-        var url = App.Helpers.generateApiURL(App.Constants.endPoints.updateCustomerStatus);
+        var url = App.Helpers.generateApiURL(App.Constants.endPoints.updateEmployeeStatus);
         App.Ajax.post(url, requestData, onSuccess, false, '', 0);
       }
     };
@@ -67786,1977 +67564,62 @@ App.Customer = {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! ./auth.js */ "./resources/js/custom/features/auth.js");
-__webpack_require__(/*! ./customers.js */ "./resources/js/custom/features/customers.js");
-__webpack_require__(/*! ./orders.js */ "./resources/js/custom/features/orders.js");
-__webpack_require__(/*! ./pick_of_the_day.js */ "./resources/js/custom/features/pick_of_the_day.js");
-__webpack_require__(/*! ./products.js */ "./resources/js/custom/features/products.js");
-__webpack_require__(/*! ./closet.js */ "./resources/js/custom/features/closet.js");
+__webpack_require__(/*! ./employees.js */ "./resources/js/custom/features/employees.js");
+__webpack_require__(/*! ./office.js */ "./resources/js/custom/features/office.js");
+__webpack_require__(/*! ./company.js */ "./resources/js/custom/features/company.js");
 __webpack_require__(/*! ./user_profile.js */ "./resources/js/custom/features/user_profile.js");
 __webpack_require__(/*! ./users.js */ "./resources/js/custom/features/users.js");
 
 /***/ }),
 
-/***/ "./resources/js/custom/features/orders.js":
+/***/ "./resources/js/custom/features/office.js":
 /*!************************************************!*\
-  !*** ./resources/js/custom/features/orders.js ***!
+  !*** ./resources/js/custom/features/office.js ***!
   \************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-App.Order = {
-  isAdmin: 0,
-  isInvoiceOrder: 0,
-  allowReload: 0,
-  selectedOrders: [],
-  tagOrders: [],
-  itemIds: [],
-  productQty: [],
-  deletedItemIds: [],
-  orderId: null,
-  refundOrderId: 0,
-  refundAction: '',
-  discountApplied: 0,
-  initializeInternationalShippingGoogleMap: function initializeInternationalShippingGoogleMap() {
-    var country_code = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : App.Constants.defaultCountryNameCode;
-    var countryCodesGiven = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    $('#form_create_order_add').on('keyup keypress', function (e) {
-      var keyCode = e.keyCode || e.which;
-      if (keyCode === 13) {
-        e.preventDefault();
-        return false;
-      }
-    });
-    var input = document.getElementById("customer_address");
-    var geocoder = new google.maps.Geocoder();
-    var fieldKey = input.id.replace("customer_", "");
-    var isEdit = document.getElementById(fieldKey + "-latitude").value != '' && document.getElementById(fieldKey + "-longitude").value != '';
-    var latitude = parseFloat(document.getElementById(fieldKey + "-latitude").value) || App.Constants.default_lat;
-    var longitude = parseFloat(document.getElementById(fieldKey + "-longitude").value) || App.Constants.default_long;
-    var codes = JSON.parse($("#store_countries").val());
-    var options = {};
-    if (countryCodesGiven) {
-      options = {
-        componentRestrictions: {
-          country: country_code
-        },
-        strictBounds: false,
-        types: ['geocode', 'establishment']
-      };
-    } else {
-      options = {
-        strictBounds: false,
-        types: ['geocode', 'establishment']
-      };
-    }
-    App.Constants.googleAutoComplete = new google.maps.places.Autocomplete(input, options);
-    App.Constants.googleAutoCompleteLsr = google.maps.event.addListener(App.Constants.googleAutoComplete, 'place_changed', function () {
-      var place = App.Constants.googleAutoComplete.getPlace();
-      if (!place.geometry) return;
-      geocoder.geocode({
-        'placeId': place.place_id
-      }, function (results, status) {
-        if (status === google.maps.GeocoderStatus.OK) {
-          App.Order.getAddressCity(results[0]);
-          var lat = results[0].geometry.location.lat();
-          var lng = results[0].geometry.location.lng();
-          var address = results[0].formatted_address;
-          App.Order.setLocationCoordinates('address', lat, lng, address);
-          App.Order.selectLocation();
-        }
-      });
-      if (!place.geometry) {
-        window.alert("No details available for input: '" + place.name + "'");
-        input.value = "";
-        return;
-      }
-    });
-  },
-  initializeValidations: function initializeValidations() {
-    $("#search-form").validate();
-    $(".allOrders").click(function () {
-      if ($(this).is(":checked")) {
-        $(".theClass").not(":disabled").each(function () {
-          App.Order.tagOrders.push($(this).val());
-        });
-      } else {
-        App.Order.tagOrders = [];
-      }
-    });
-    $(document).on("click", ".theClass", function () {
-      if ($(this).is(":checked")) {
-        App.Order.tagOrders.push($(this).val());
-      } else {
-        App.Order.tagOrders.splice($.inArray($(this).val(), App.Order.tagOrders), 1);
-      }
-    });
-  },
-  exportOrders: function exportOrders() {
-    var store = $("#store").val();
-    var tags = $("#tags").val();
-    var placement_type = $("#placement_type").val();
-    var merchant_name = $("#merchant_name").val();
-    var customer_name = $("#customer_name").val();
-    var customer_email = $("#customer_email").val();
-    var customer_phone_number = $("#customer_phone_number").val();
-    var order_id = $("#order_id").val();
-    var order_reference_number = $("#order_reference_number").val();
-    var order_status = $("#order_status").val();
-    var payment_status = $("#payment_status").val();
-    var payment_gateway = $("#payment_gateway").val();
-    var fulfillment_status = $("#fulfillment_status").val();
-    var date_range = $("#daterange").val();
-    var export_type = $("#export_type").val();
-    var is_abandoned_checkout = $("#is_abandoned_checkout").val();
-    var recovery_status = $("#recovery_status").val();
-    var edited_orders = $("#edited_orders").val();
-    var sms_status = $("#sms_status").val();
-    var is_invoice_order = App.Order.isInvoiceOrder;
-    var selected_orders = JSON.stringify(App.Order.selectedOrders);
-    var query_string = '?merchant_name=' + merchant_name + '&customer_name=' + customer_name + '&customer_email=' + customer_email + '&customer_phone_number=' + customer_phone_number + '&order_id=' + order_id + '&order_reference_number=' + order_reference_number + '&order_status=' + order_status + '&payment_status=' + payment_status + '&payment_gateway=' + payment_gateway + '&fulfillment_status=' + fulfillment_status + '&date_range=' + date_range + '&placement_type=' + placement_type + '&export_type=' + export_type + '&store=' + store + "&selected_orders=" + selected_orders + "&tags=" + tags + "&recovery_status=" + recovery_status + "&edited_orders=" + edited_orders + "&is_abandoned_checkout=" + is_abandoned_checkout + "&sms_status=" + sms_status + "&is_invoice_order=" + is_invoice_order;
-    window.open('' + App.Constants.endPoints.exportOrders + query_string, '_blank');
-  },
-  removeFilters: function removeFilters() {
-    $("#placement_type").val("");
-    $("#customer_id").val("");
-    $("#merchant_id").val("");
-    $("#merchant_name").val('').trigger('change');
-    $("#customer_name").val("");
-    $("#customer_email").val("");
-    $("#customer_phone_number").val("");
-    $("#order_id").val("");
-    $("#merchant_order_id").val("");
-    $("#order_reference_number").val("");
-    $("#order_status").val("");
-    $("#payment_status").val("");
-    $("#payment_gateway").val("");
-    $("#fulfillment_status").val("");
-    $("#daterange").val("");
-    $("#store").val("").trigger('change');
-    $("#tags").val("").trigger('change');
-    $("#recovery_status").val("").trigger('change');
-    $("#edited_orders").val("").trigger('change');
-    $("#sms_status").val("").trigger('change');
-    App.Helpers.removeAllfilters();
-  },
-  removeSelectionFilters: function removeSelectionFilters() {
-    $("#merchant_name").val('').trigger('change');
-    $("#recovery_status").val('').trigger('change');
-    $("#edited_orders").val('').trigger('change');
-    $("#sms_status").val('').trigger('change');
-    $("#daterange").val("");
-    $("#store").val("").trigger('change');
-    $("#tags").val("").trigger('change');
-    $("#order_status").val("");
-    $("#payment_status").val("");
-    $("#checkout_type").val("");
-    $("#gateway_checkout_type").val("");
-    $("#payment_gateway").val("");
-    $("#fulfillment_status").val("");
-    $(".expandFilterWrap #placement_type").val("");
-    App.Helpers.oTable.draw();
-  },
-  initializeDataTable: function initializeDataTable() {
-    var table_name = "orders_table";
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.getOrders);
-    var columns = [];
-    if (App.Order.isInvoiceOrder == 1) {
-      // Invoice Listing with additional columns
-      if (this.isAdmin == 1) {
-        console.log('invoice listing 1');
-        columns = [{
-          data: "show",
-          name: "show",
-          orderable: false,
-          searchable: false
-        }, {
-          data: "check",
-          name: "check",
-          orderable: false,
-          searchable: false
-        }, {
-          data: "row_id",
-          name: "row_id",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "customer_id",
-          name: "customer_id",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "store",
-          name: "store",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "created_at",
-          name: "created_at",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "merchant_order_id",
-          name: "merchant_order_id",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "placement_status",
-          name: "placement_status",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "comment",
-          name: "comment",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "tags",
-          name: "tags",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "payment_method",
-          name: "payment_method",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "payment_gateway",
-          name: "payment_gateway",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "merchant_name",
-          name: "merchant_name",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "customer_name",
-          name: "customer_name",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "customer_phone_number",
-          name: "customer_phone_number",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "total_amount",
-          name: "total_amount",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "discount",
-          name: "discount",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "order_amount",
-          name: "order_amount",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "placement_type",
-          name: "placement_type",
-          orderable: false,
-          searchable: true
-        }, {
-          data: "ref_no",
-          name: "ref_no",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "customer_city",
-          name: "customer_city",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "payment_status",
-          name: "payment_status",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "bsecure_fulfillment_status",
-          name: "bsecure_fulfillment_status",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "checkout_type",
-          name: "checkout_type",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "gt_checkout_type",
-          name: "gt_checkout_type",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "environment",
-          name: "environment",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "recovery_status",
-          name: "recovery_status",
-          orderable: true,
-          searchable: true
-        }];
-      } else {
-        columns = [{
-          data: "show",
-          name: "show",
-          orderable: false,
-          searchable: false
-        }, {
-          data: "check",
-          name: "check",
-          orderable: false,
-          searchable: false
-        }, {
-          data: "row_id",
-          name: "row_id",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "customer_id",
-          name: "customer_id",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "store",
-          name: "store",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "created_at",
-          name: "created_at",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "merchant_order_id",
-          name: "merchant_order_id",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "placement_status",
-          name: "placement_status",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "comment",
-          name: "comment",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "tags",
-          name: "tags",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "payment_method",
-          name: "payment_method",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "payment_gateway",
-          name: "payment_gateway",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "customer_name",
-          name: "customer_name",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "customer_phone_number",
-          name: "customer_phone_number",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "discount",
-          name: "discount",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "order_amount",
-          name: "order_amount",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "placement_type",
-          name: "placement_type",
-          orderable: false,
-          searchable: true
-        }, {
-          data: "ref_no",
-          name: "ref_no",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "customer_city",
-          name: "customer_city",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "payment_status",
-          name: "payment_status",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "bsecure_fulfillment_status",
-          name: "bsecure_fulfillment_status",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "checkout_type",
-          name: "checkout_type",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "gt_checkout_type",
-          name: "gt_checkout_type",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "environment",
-          name: "environment",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "recovery_status",
-          name: "recovery_status",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "actions",
-          name: "actions",
-          orderable: true,
-          searchable: true
-        }];
-      }
-    } else {
-      // Order Listing
-      if (this.isAdmin == 1) {
-        columns = [{
-          data: "show",
-          name: "show",
-          orderable: false,
-          searchable: false
-        }, {
-          data: "check",
-          name: "check",
-          orderable: false,
-          searchable: false
-        }, {
-          data: "row_id",
-          name: "row_id",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "customer_id",
-          name: "customer_id",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "store",
-          name: "store",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "created_at",
-          name: "created_at",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "merchant_order_id",
-          name: "merchant_order_id",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "placement_status",
-          name: "placement_status",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "tags",
-          name: "tags",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "payment_method",
-          name: "payment_method",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "payment_gateway",
-          name: "payment_gateway",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "merchant_name",
-          name: "merchant_name",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "customer_name",
-          name: "customer_name",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "customer_phone_number",
-          name: "customer_phone_number",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "total_amount",
-          name: "total_amount",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "discount",
-          name: "discount",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "order_amount",
-          name: "order_amount",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "placement_type",
-          name: "placement_type",
-          orderable: false,
-          searchable: true
-        }, {
-          data: "ref_no",
-          name: "ref_no",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "customer_city",
-          name: "customer_city",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "payment_status",
-          name: "payment_status",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "bsecure_fulfillment_status",
-          name: "bsecure_fulfillment_status",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "checkout_type",
-          name: "checkout_type",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "gt_checkout_type",
-          name: "gt_checkout_type",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "environment",
-          name: "environment",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "recovery_status",
-          name: "recovery_status",
-          orderable: true,
-          searchable: true
-        }];
-      } else {
-        columns = [{
-          data: "show",
-          name: "show",
-          orderable: false,
-          searchable: false
-        }, {
-          data: "check",
-          name: "check",
-          orderable: false,
-          searchable: false
-        }, {
-          data: "row_id",
-          name: "row_id",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "customer_id",
-          name: "customer_id",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "store",
-          name: "store",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "created_at",
-          name: "created_at",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "merchant_order_id",
-          name: "merchant_order_id",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "placement_status",
-          name: "placement_status",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "tags",
-          name: "tags",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "payment_method",
-          name: "payment_method",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "payment_gateway",
-          name: "payment_gateway",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "customer_name",
-          name: "customer_name",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "customer_phone_number",
-          name: "customer_phone_number",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "discount",
-          name: "discount",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "order_amount",
-          name: "order_amount",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "placement_type",
-          name: "placement_type",
-          orderable: false,
-          searchable: true
-        }, {
-          data: "ref_no",
-          name: "ref_no",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "customer_city",
-          name: "customer_city",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "payment_status",
-          name: "payment_status",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "bsecure_fulfillment_status",
-          name: "bsecure_fulfillment_status",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "checkout_type",
-          name: "checkout_type",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "gt_checkout_type",
-          name: "gt_checkout_type",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "environment",
-          name: "environment",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "recovery_status",
-          name: "recovery_status",
-          orderable: true,
-          searchable: true
-        }, {
-          data: "actions",
-          name: "actions",
-          orderable: true,
-          searchable: true
-        }];
-      }
-    }
-    var postData = function postData(d) {
-      d.merchant_id = $("#merchant_id").val();
-      d.customer_id = $("#customer_id").val();
-      d.merchant_name = $("#merchant_name").val();
-      d.customer_name = $("#customer_name").val();
-      d.customer_email = $("#customer_email").val();
-      d.customer_phone_number = $("#customer_phone_number").val();
-      d.store_slug = $("#store_slug").val();
-      d.order_id = $("#order_id").val();
-      d.merchant_order_id = $("#merchant_order_id").val();
-      d.order_reference_number = $("#order_reference_number").val();
-      d.order_status = $("#order_status").val();
-      d.placement_type = $("#placement_type").val();
-      d.payment_status = $("#payment_status").val();
-      d.payment_gateway = $("#payment_gateway").val();
-      d.fulfillment_status = $("#fulfillment_status").val();
-      d.checkout_type = $("#checkout_type").val();
-      d.gateway_checkout_type = $("#gateway_checkout_type").val();
-      d.date_range = $("#daterange").val();
-      d.store = $("#store").val();
-      d.tags = $("#tags").val();
-      d.recovery_status = $("#recovery_status").val();
-      d.edited_orders = $("#edited_orders").val();
-      d.is_invoice_order = App.Order.isInvoiceOrder;
-    };
-    var orderColumn = [[2, "desc"]];
-    var searchEnabled = true;
-    App.Helpers.CreateDataTableIns(table_name, url, columns, postData, searchEnabled, orderColumn, [], true, true, 10, 1);
-  },
-  removeEnvironment: function removeEnvironment() {
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.setEnvironment);
-    var onSuccess = function onSuccess(response) {
-      var obj = document.getElementById('merchant_name');
-      App.Helpers.getAppsByMerchantId(obj, '{{$defaultEnvironment}}');
-    };
-    var requestData = {};
-    App.Ajax.get(url, requestData, onSuccess, false, {}, 0);
-  },
-  changeFlaggedOrderStatus: function changeFlaggedOrderStatus(order_id, previous_order_status, merchant_id) {
-    var text = "You want to change the status?";
-    var action = function action(isConfirm) {
-      if (isConfirm) {
-        var status = $("#verification_order_status").val();
-        var status_label = $("#verification_order_status option:selected").text();
-        var onSuccess = function onSuccess(response) {
-          $('#order-id').removeClass('text-danger');
-          $('#orderStatusWrapper').html('<span>' + status_label + '</span>');
-        };
-        var url = App.Helpers.generateApiURL(App.Constants.endPoints.updateOrderVerificationStatus);
-        var requestData = {
-          id: order_id,
-          placement_status: status,
-          merchant_id: merchant_id
-        };
-        App.Ajax.post(url, requestData, onSuccess, false, {});
-      } else {
-        $('#verification_order_status').val(previous_order_status);
-      }
-    };
-    App.Helpers.confirm(text, action);
-  },
-  cloneOrder: function cloneOrder(url) {
-    window.location.href = url;
-  },
-  orderLogs: function orderLogs(url) {
-    window.location.href = url;
-  },
-  showOrderAccountingsModal: function showOrderAccountingsModal() {
-    $(document).on("click", '.get-order-accountings', function (e) {
-      var orderId = $(this).attr("data-order-id");
-      var onSuccess = function onSuccess(response) {
-        $("#order_accountings_modal_wrapper").html(response);
-        $('.order-accountings-modal').modal('show');
-      };
-      var url = App.Helpers.generateApiURL(App.Constants.endPoints.getOrderAccountings);
-      url += '/' + orderId;
-      var requestData = {};
-      App.Ajax.get(url, requestData, onSuccess, false, {}, 0);
-    });
-  },
-  getMerchantStores: function getMerchantStores(merchant_id) {
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.getAllStoresByMerchant);
-    var requestData = {
-      merchant_id: merchant_id
-    };
-    var onSuccess = function onSuccess(response) {
-      App.Helpers.fileDropdown('store', response, 'Select store', '');
-    };
-    App.Ajax.get(url, requestData, onSuccess, false, {}, 0);
-  },
-  saveOrderTags: function saveOrderTags(listing) {
-    var form = $('#form_merchant_order_tags');
-    if (form.valid()) {
-      if (listing != undefined && App.Order.tagOrders.length <= 0) {
-        swal("Error!", 'Please select orders to apply tags!', "warning");
-        return false;
-      }
-      var selected_orders = '';
-      selected_orders = JSON.stringify(App.Order.tagOrders);
-      var onSuccess = function onSuccess(selected_orders) {
-        if (App.Order.tagOrders.length > 0) {
-          $('.apply-tags-modal').modal('hide');
-          App.Helpers.refreshDataTable();
-          $(".allOrders").prop('checked', false);
-          $(".cbbox_tags").prop('checked', false);
-          App.Order.tagOrders = [];
-        }
-      };
-      var url = App.Helpers.generateApiURL(App.Constants.endPoints.saveOrderTags);
-      var requestData = form.serialize();
-
-      // if ($.trim(requestData) == '' || $.trim(requestData) == null || $.trim(requestData) == undefined || ($('#form_merchant_order_tags #tags').val() && $('#form_merchant_order_tags #tags').val().length <= 0)) {
-      //     swal("Error!", 'Please select tag(s) to apply!', "warning");
-      //     return false;
-      // }
-
-      if (App.Order.tagOrders.length > 0) {
-        requestData += '&selected_orders=' + selected_orders;
-      }
-      App.Ajax.post(url, requestData, onSuccess, false, {}, 0);
-    }
-  },
-  initializeOrderSelect: function initializeOrderSelect(order_id) {
-    var success = function success(response) {
-      var orderTags = response.orderTags;
-      orderTags = orderTags.map(function (tag) {
-        return tag.tag_id;
-      });
-      $('#tags').val(orderTags).trigger('change');
-    };
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.getOrderTags);
-    var requestData = {
-      'order_id': order_id
-    };
-    App.Ajax.get(url, requestData, success, null, {}, 0);
-  },
-  removeSelectedOrders: function removeSelectedOrders() {
-    App.Order.selectedOrders = [];
-  },
-  getCollapseData: function getCollapseData(el, collapseId, orderRef, orderId) {
-    if ($("#".concat(collapseId)).hasClass('show')) {
-      $(el).attr('aria-expanded', false);
-      $("#".concat(collapseId)).collapse('hide');
-    } else {
-      var rowCount = $("#".concat(collapseId, " .table tbody tr")).length;
-      if (rowCount == 0) {
-        var url = App.Helpers.generateApiURL(App.Constants.endPoints.getOrderCollapseData);
-        var requestData = {
-          collapseId: collapseId,
-          order_ref: orderRef,
-          orderId: orderId
-        };
-        var onSuccess = function onSuccess(response) {
-          if (response.render_html) {
-            $(el).attr('aria-expanded', true);
-            $("#".concat(collapseId, " .table > tbody:last-child")).append(response.render_html);
-            $("#".concat(collapseId)).collapse('show');
-          }
-        };
-        App.Ajax.get(url, requestData, onSuccess, false, {}, 0);
-      } else {
-        $(el).attr('aria-expanded', true);
-        $("#".concat(collapseId)).collapse('show');
-      }
-    }
-  },
-  getFlaggedShipmentLogs: function getFlaggedShipmentLogs(el, collapseId, orderId) {
-    if ($("#".concat(collapseId)).hasClass('show')) {
-      $(el).attr('aria-expanded', false);
-      $("#".concat(collapseId)).collapse('hide');
-    } else {
-      var rowCount = $("#".concat(collapseId, " .table tbody tr")).length;
-      if (rowCount == 0) {
-        var url = App.Helpers.generateApiURL(App.Constants.endPoints.getFlaggedShipmentLogs);
-        var requestData = {
-          collapseId: collapseId,
-          orderId: orderId
-        };
-        var onSuccess = function onSuccess(response) {
-          if (response.render_html) {
-            $(el).attr('aria-expanded', true);
-            $("#".concat(collapseId, " .table > tbody:last-child")).append(response.render_html);
-            $("#".concat(collapseId)).collapse('show');
-          }
-        };
-        App.Ajax.get(url, requestData, onSuccess, false, {}, 0);
-      } else {
-        $(el).attr('aria-expanded', true);
-        $("#".concat(collapseId)).collapse('show');
-      }
-    }
-  },
-  clearOrderSelection: function clearOrderSelection() {
-    App.Products.selectedOrders = [];
-    App.Order.tagOrders = [];
-    if ($(".allOrders").is(':checked')) {
-      $(".allOrders").click();
-    }
-  },
-  resetFiltersOptions: function resetFiltersOptions() {
-    if ($(".FilterDropDownMenu").hasClass('show')) {
-      $(".FilterDropDownMenu").removeClass('show');
-      $(".customCheckboxContainer .filterCheckbox").each(function () {
-        $(this).prop('checked', false);
-        var inputValue = $(this).attr('value');
-        if (!this.checked) {
-          $("#" + inputValue).val(null).trigger("change");
-        }
-        $('.' + inputValue).css("display", "none");
-      });
-    }
-  },
-  filterColumnsSearch: function filterColumnsSearch() {
-    inputValue = $('#filterColumnsSearch').val();
-    allColumns_ = ['all', 'customer_id', 'customer_name', 'customer_email', 'merchant_order_id', 'customer_phone_number', 'order_reference_number', 'order_id'];
-    selectedCols = $("#js-select2").select2('val');
-    $("#js-select2 option").each(function () {
-      if (selectedCols.indexOf($(this).val()) > -1) {
-        $('#' + $(this).val()).attr('value', inputValue);
-      } else {
-        $('#' + $(this).val()).val('');
-      }
-    });
-    App.Helpers.oTable.draw();
-  },
-  printOrderDetail: function printOrderDetail() {
-    $('.orderDetails .collapse').each(function () {
-      $(this).addClass('show');
-    });
-    setTimeout(function (args) {
-      var printContents = document.querySelector('.wrapper').innerHTML;
-      var originalContents = document.body.innerHTML;
-      document.body.innerHTML = printContents;
-      window.print();
-      document.body.innerHTML = originalContents;
-    }, 200);
-  },
-  sendAbandonedOrderSms: function sendAbandonedOrderSms(orderId) {
-    var success = function success(response) {
-      App.Helpers.refreshDataTable();
-    };
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.sendAbandonedOrderSms);
-    var requestData = {
-      'order_id': orderId
-    };
-    App.Ajax.post(url, requestData, success, null, {}, 0);
-  },
-  saveReasonForFlaggedShipment: function saveReasonForFlaggedShipment(formId) {
-    var form = $("#" + formId);
-    var itemId = $('.customFlaggedRow').find('#orderItemId').val();
-    if (form.valid()) {
-      var onSuccess = function onSuccess(response) {
-        $('.row-' + itemId).find('.fulfillment-status').text($("#shipmentStatus option:selected").text());
-        $('.row-' + itemId).find('.flaggedItemBtn').hide();
-        $('.flagged-item-modal').modal('hide');
-        $('.logDetailWrap').find('#orderFulfillmentStatus').text(response.orderFulfillmentStatus);
-      };
-      var url = App.Helpers.generateApiURL(App.Constants.endPoints.saveReasonForFlaggedShipment);
-      var requestData = form.serialize();
-      App.Ajax.post(url, requestData, onSuccess, false, {}, 0);
-    }
-  },
-  flaggedOrderItem: function flaggedOrderItem(itemId, previousShipmentStatus) {
-    $('.customFlaggedRow').find('#orderItemId').val(itemId);
-    $('.customFlaggedRow').find('#previousShipmentStatus').val(previousShipmentStatus);
-    $('.customFlaggedRow').find("#shipmentStatus").val('').trigger('change');
-    $('.customFlaggedRow').find("#blameTo").val('').trigger('change');
-    $('.customFlaggedRow').find('#reasonForFlaggedOrder').val('');
-  },
-  calculateOrderTotal: function calculateOrderTotal() {
-    var sub_total = 0;
-    var total_discount = 0;
-    $("#orderItemsRow tr").each(function () {
-      var price = Number($(this).find('.item-price').data('price'));
-      var discount = Number($(this).find('.item-discount').data('discount'));
-      var qty = Number($(this).find('#product_qty').val());
-      if ($.trim(qty) == '' || qty == 0) {
-        qty = 1;
-      }
-      sub_total += (price - discount) * qty;
-    });
-    var shipping_price = $('.orderInfoBox').find('.shipping_price').text();
-    var service_charges = $('.orderInfoBox').find('.service-charges').text();
-    var additional_charges = $('.orderInfoBox').find('.additional-charges').text();
-    total_discount = $('.orderInfoBox').find(".total-discount").text();
-    shipping_price = parseFloat(shipping_price);
-    service_charges = parseFloat(service_charges);
-    additional_charges = parseFloat(additional_charges);
-    var order_grand_total = sub_total + shipping_price + service_charges + additional_charges - total_discount;
-
-    // $('.orderInfoBox').find(".total-discount").text(total_discount);
-    $('.orderInfoBox').find(".sub-total").text(sub_total);
-    $('.box-body').find(".grand-total").text(order_grand_total);
-  },
-  editOrderItems: function editOrderItems() {
-    if (App.Order.discountApplied == App.Constants.ON) {
-      $('.add-order-item').removeClass('d-none');
-      $('.save-edit-order-class').removeClass('d-none');
-      $('.discount_applied_message').removeClass('d-none');
-    } else {
-      $('.edit-order-class').removeClass('d-none');
-      $('.qty-txt').hide();
-    }
-  },
-  deleteOrderItem: function deleteOrderItem(thisRow, itemId) {
-    var itemCount = $('#orderItemsRow tr').length;
-    if (itemCount > 1) {
-      if (itemId != null) {
-        App.Order.deletedItemIds.push(itemId);
-      }
-      $(thisRow).closest('tr').remove();
-      App.Order.calculateOrderTotal();
-    } else {
-      swal("Warning!", 'You cannot delete last order item.', "warning");
-    }
-  },
-  addNewItemBtn: function addNewItemBtn() {
-    $('#addItemForm #name').val('');
-    $('#addItemForm #price').val('');
-    $('#addItemForm #quantity').val('');
-  },
-  updatePrice: function updatePrice(thisKey) {
-    var qty = $(thisKey).closest('#product_qty').val();
-    var id = $(thisKey).closest('tr').data('id');
-    var price = $(thisKey).data('price');
-    var discount = $(thisKey).closest('tr').find('.item-discount').data('discount');
-    if ($.trim(qty) == '' || qty == 0) {
-      qty = 1;
-    }
-    var item_price = qty * price;
-    var sale_item_price = price - discount;
-    $(thisKey).closest('tr').find('.qty-txt').text(qty);
-    $(thisKey).closest('tr').find('.item-price').text(item_price);
-    $(thisKey).closest('tr').find('.item-discount').text(discount * qty);
-    $(thisKey).closest('tr').find('.item-sale-price').text(sale_item_price * qty);
-    App.Order.calculateOrderTotal();
-    if (id != undefined) {
-      App.Order.itemIds.push(id);
-      App.Order.productQty.push(qty);
-    }
-  },
-  saveOrderItem: function saveOrderItem(orderId) {
-    var productQtyObj = {};
-    var newProductObj = {};
-    var valid = true;
-    $.each(App.Order.itemIds, function (key, val) {
-      productQtyObj[val] = App.Order.productQty[key];
-    });
-    $("#orderItemsRow .new-item-row").each(function (i) {
-      newProductObj[i] = {
-        "product_name": $(this).find('.new-item-name').text(),
-        "product_price": $(this).find('.new-item-price').data('price'),
-        "product_qty": $(this).find('.new-item-qty').val(),
-        "product_image": $(this).find('.new-item-image').prop('src')
-      };
-    });
-    var requestData = {
-      "orderId": orderId,
-      "productQtyArr": JSON.stringify(productQtyObj),
-      "newProductObj": JSON.stringify(newProductObj),
-      "deletedItemIds": JSON.stringify(App.Order.deletedItemIds)
-    };
-    $("#orderItemsRow tr").each(function (i) {
-      if ($(this).find('#product_qty').val() == '' || $(this).find('#product_qty').val() == 0) {
-        App.Helpers.showErrorMessage({
-          'error': 'Product quantity cannot be empty or zero'
-        });
-        valid = false;
-      }
-    });
-    if (valid) {
-      var onSuccess = function onSuccess(response) {
-        location.reload();
-      };
-      var onFailure = function onFailure(response) {};
-      var url = App.Helpers.generateApiURL(App.Constants.endPoints.saveOrderItem);
-      App.Ajax.post(url, requestData, onSuccess, onFailure, {}, 0);
-    }
-  },
-  addOrderItem: function addOrderItem(formId) {
-    var form = $("#" + formId);
-    if (form.valid()) {
-      var onSuccess = function onSuccess(response) {
-        $('.add-item-modal').modal('hide');
-        $("#orderItemsRow").append(response.render_html);
-        App.Order.calculateOrderTotal();
-      };
-      var url = App.Helpers.generateApiURL(App.Constants.endPoints.addOrderItem);
-      var requestData = form.serialize();
-      App.Ajax.post(url, requestData, onSuccess, false, 'hide_message', 0);
-    }
-  },
-  updatePaymentStatus: function updatePaymentStatus(thisKey, orderId) {
-    var paymentStatus = $(thisKey).val();
-    var onSuccess = function onSuccess(response) {
-      App.OrderLogs.setOrderLogs(orderId);
-    };
-    var requestData = {
-      'paymentStatus': paymentStatus,
-      'orderId': orderId
-    };
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.updateOrderPaymentStatus);
-    App.Ajax.post(url, requestData, onSuccess, false, '', 0);
-  },
-  selectLocation: function selectLocation() {
-    var form = $('.locationFieldWrap #address-form-type').val();
-    var lat = $('.locationFieldWrap #address-latitude').val();
-    var _long = $('.locationFieldWrap #address-longitude').val();
-    var address = $('.locationFieldWrap #address-formatted').val();
-    var store_slug = $("#merchant_store").select2().find(":selected").data("store_slug");
-    var onSuccess = function onSuccess(response) {
-      $("#customer_address").val(address);
-      $('#customer_address').valid();
-      $("#customer_address").prop('readOnly', false);
-      //$("#address").val(address);
-
-      $("#customer-address-field-wrapper #country").val(response.countryId);
-      $("#customer-address-field-wrapper #province").val(response.provinceId);
-      $("#customer-address-field-wrapper #city").val(response.cityId);
-      $("#customer-address-field-wrapper #area").val(response.areaId);
-    };
-    var onFailure = function onFailure(response) {
-      $("#customer_address").val('');
-    };
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.locationDetailForInternationalShipment);
-    var requestData = {
-      latitude: parseFloat(lat),
-      longitude: parseFloat(_long),
-      store_slug: store_slug
-    };
-    App.Ajax.post(url, requestData, onSuccess, onFailure, {}, 0);
-  },
-  openLocationModal: function openLocationModal(form) {
-    var lat = $("#order_create_form_".concat(form, " #lat")).val();
-    var _long2 = $("#order_create_form_".concat(form, " #long")).val();
-    var address = $("#order_create_form_".concat(form, " #address")).val();
-    $('#form_create_order_add #address-form-type').val(form);
-    if (lat && _long2 && address) {
-      var latlng = new google.maps.LatLng(lat, _long2);
-      App.Order.setMarkerWithLatLng(latlng);
-    } else {
-      var latlng = new google.maps.LatLng(App.Constants.default_lat, App.Constants.default_long);
-      App.Constants.MAP.setCenter(latlng);
-      App.Constants.MAP.setZoom(13);
-      App.Constants.MARKER.setVisible(false);
-    }
-  },
-  selectCurrentLocation: function selectCurrentLocation() {
-    if (navigator.geolocation) {
-      // var lat = 24.878458;
-      // var lng = 67.06415729999999;
-      navigator.geolocation.getCurrentPosition(function (position) {
-        var lat = position.coords.latitude;
-        var lng = position.coords.longitude;
-        var latlng = new google.maps.LatLng(lat, lng);
-        App.Order.setMarkerWithLatLng(latlng);
-      });
-    }
-  },
-  setMarkerWithLatLng: function setMarkerWithLatLng(latlng) {
-    if (latlng) {
-      var geocoder = new google.maps.Geocoder();
-      geocoder.geocode({
-        'location': latlng
-      }, function (results, status) {
-        if (status === google.maps.GeocoderStatus.OK) {
-          App.Order.getAddressCity(results[0]);
-          var lat = results[0].geometry.location.lat();
-          var lng = results[0].geometry.location.lng();
-          var address = results[0].formatted_address;
-          App.Order.setLocationCoordinates('address', lat, lng, address);
-          App.Constants.MARKER.setPosition(latlng);
-          App.Constants.MAP.setCenter(latlng);
-          App.Constants.MAP.setZoom(17);
-          App.Constants.MARKER.setVisible(true);
-        }
-      });
-    }
-  },
-  setLocationCoordinates: function setLocationCoordinates(key, lat, lng, address) {
-    var latitudeField = document.getElementById(key + "-" + "latitude");
-    var longitudeField = document.getElementById(key + "-" + "longitude");
-    var addressField = document.getElementById(key + '-' + "formatted");
-    //const addressSearch  = document.getElementById(key + '-' + "input");
-    latitudeField.value = lat;
-    longitudeField.value = lng;
-    addressField.value = address;
-    //addressSearch.value  = address;
-  },
-
-  getAddressCity: function getAddressCity(address) {
-    var addressComponents = address.address_components;
-    var addressDetails = {
-      'city': '',
-      'country': ''
-    };
-    $.each(addressComponents, function (index, component) {
-      var types = component.types;
-      if ($.inArray("locality", types) != -1 && $.inArray("political", types) != -1) {
-        addressDetails.city = component.long_name;
-        $('.locationFieldWrap #address-city').val(component.long_name);
-      }
-      if ($.inArray("country", types) != -1 && $.inArray("political", types) != -1) {
-        addressDetails.country = component.long_name;
-        $('.locationFieldWrap #address-country').val(component.long_name);
-      }
-    });
-    return addressDetails;
-  },
-  checkInternationalDelivery: function checkInternationalDelivery() {
-    var areaBaseShipment = $("#merchant_store").select2().find(":selected").data("area_based_shipment");
-    var internationalCheck = $("#merchant_store").select2().find(":selected").data("international_delivery");
-    var countriesCode = [];
-    var countriesCodeCheck = false;
-    if (areaBaseShipment == 0 || areaBaseShipment == 1 && internationalCheck == 1) {
-      //$(".area-based-shipment").css('display','none');
-      //$(".international-delivery").css('display','block');
-
-      $(".area-based-shipment").hide();
-      App.Order.locationDropdown(true);
-      $(".international-delivery").show();
-      App.Order.addCustomerAddressFieldsInWrapper('add');
-      if (areaBaseShipment == 0) {
-        App.Order.initializeInternationalShippingGoogleMap(countriesCode, false);
-      } else {
-        App.Order.initializeInternationalShippingGoogleMap(countriesCode, true);
-      }
-      $("#is_international_Shiping").val(internationalCheck);
-    } else {
-      $(".area-based-shipment").show();
-      App.Order.locationDropdown(false);
-      $(".international-delivery").hide();
-      App.Order.addCustomerAddressFieldsInWrapper('remove');
-      $("#is_international_Shiping").val(internationalCheck);
-      App.Helpers.removeGoogleInstance();
-    }
-    $("#merchant_store").on("select2:select", function (e) {
-      var areaBaseShipment = $(e.params.data.element).data('area_based_shipment');
-      var check = $(e.params.data.element).data('international_delivery');
-      if (areaBaseShipment == 0 || areaBaseShipment == 1 && check == 1) {
-        $(".area-based-shipment").hide();
-        App.Order.locationDropdown(true);
-        $(".international-delivery").show();
-        App.Order.addCustomerAddressFieldsInWrapper('add');
-        $("#is_international_Shiping").val(check);
-      } else {
-        $(".area-based-shipment").show();
-        App.Order.locationDropdown(false);
-        $(".international-delivery").hide();
-        App.Order.addCustomerAddressFieldsInWrapper('remove');
-        $("#is_international_Shiping").val(check);
-        App.Helpers.removeGoogleInstance();
-      }
-    });
-  },
-  locationDropdown: function locationDropdown() {
-    var $disabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-    var data = ['country', 'province', 'city', 'area'];
-    $.map(data, function (value) {
-      $(".area-based-shipment #".concat(value)).prop('disabled', $disabled);
-    });
-  },
-  addCustomerAddressFieldsInWrapper: function addCustomerAddressFieldsInWrapper() {
-    var check = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'add';
-    var data = ['country', 'province', 'city', 'area'];
-    $.map(data, function (value) {
-      if (check == 'add') {
-        $("#customer-address-field-wrapper").append('<input type="hidden" id="' + value + '" name="' + value + '">');
-      } else if (check == 'remove') {
-        $("#customer-address-field-wrapper #".concat(value)).remove();
-      }
-    });
-  },
-  updateOrderPaymentMode: function updateOrderPaymentMode(action) {
-    var orderId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-    var refundReason = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-    var onSuccess = function onSuccess(response) {
-      App.Helpers.refreshDataTable();
-      App.Order.selectedOrders = [];
-      if (response.message_body != undefined) {
-        if (response.message_body.failure.length > 0) {
-          App.Order.openMessagesModal(response);
-        }
-      }
-    };
-    var onFailure = function onFailure(response) {
-      App.Helpers.refreshDataTable();
-      App.Order.selectedOrders = [];
-    };
-    if (orderId == null) {
-      if (App.Order.selectedOrders.length > 0) {
-        orderId = JSON.stringify(App.Order.selectedOrders);
-      } else {
-        return App.Helpers.showErrorMessage({
-          'error': 'Please select at least one order'
-        });
-      }
-    } else {
-      orderId = JSON.stringify([orderId]);
-    }
-    if (refundReason == null) {
-      var confirmAction = function confirmAction(isConfirm) {
-        if (isConfirm) {
-          var requestData = {
-            'orderId': orderId,
-            'action': action,
-            'refund_reason': refundReason
-          };
-          var url = App.Helpers.generateApiURL(App.Constants.endPoints.updateOrderPaymentMode);
-          App.Ajax.post(url, requestData, onSuccess, onFailure, 'hide_message_open_modal');
-        }
-      };
-      App.Helpers.confirm('You want to perform this action', confirmAction);
-    } else {
-      var requestData = {
-        'orderId': orderId,
-        'action': action,
-        'refund_reason': refundReason
-      };
-      var url = App.Helpers.generateApiURL(App.Constants.endPoints.updateOrderPaymentMode);
-      App.Ajax.post(url, requestData, onSuccess, onFailure, 'hide_message_open_modal');
-    }
-  },
-  openRefundReasonModal: function openRefundReasonModal(action) {
-    var orderId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-    if (orderId == null) {
-      if (App.Order.selectedOrders.length > 0) {
-        App.Order.refundOrderId = JSON.stringify(App.Order.selectedOrders);
-      } else {
-        return App.Helpers.showErrorMessage({
-          'error': 'Please select at least one order'
-        });
-      }
-    } else {
-      App.Order.orderId = orderId;
-      App.Order.refundOrderId = JSON.stringify([orderId]);
-    }
-    App.Order.refundAction = action;
-    $('#refundReason').val('').keyup();
-    $('#orderRefundReason').modal('show');
-  },
-  saveRefundReason: function saveRefundReason() {
-    var refundReason = $('#refundReason').val();
-    var onSuccess = function onSuccess() {
-      $('#orderRefundReason').modal('hide');
-      App.Order.updateOrderPaymentMode(App.Order.refundAction, App.Order.orderId, refundReason);
-      App.Order.orderId = null;
-    };
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.saveOrderRefundReason);
-    var requestData = {
-      'orderId': App.Order.refundOrderId,
-      'refundReason': refundReason
-    };
-    App.Ajax.post(url, requestData, onSuccess, false, 'hide_message_with_loader', 0);
-  },
-  openMessagesModal: function openMessagesModal(response) {
-    var success = response.message_body.success;
-    var failure = response.message_body.failure;
-    $('#successMessages').html('');
-    $('#failureMessages').html('');
-    if (success.length > 0) {
-      var html = '';
-      for (var i = 0; i < success.length; i++) {
-        html += '<tr><td><span class="payment-status-response">' + success[i].order_ref + '</span></td><td><span class="payment-status-response">' + success[i].message + '</span></td></tr>';
-      }
-      $('#successMessages').html(html);
-    } else {
-      $('#successMessages').html('<tr><td><span class="payment-status-response">---</span></td><td><span class="payment-status-response">---</span></td></tr>');
-    }
-    if (failure.length > 0) {
-      var html = '';
-      for (var j = 0; j < failure.length; j++) {
-        html += '<tr><td><span class="payment-status-response">' + failure[j].order_ref + '</span></td><td><span class="payment-status-response">' + failure[j].message + '</span></td></tr>';
-      }
-      $('#failureMessages').html(html);
-    } else {
-      $('#failureMessages').html('<tr><td><span class="payment-status-response">---</span></td><td><span class="payment-status-response">---</span></td></tr>');
-    }
-    $('#responseMessages').modal('show');
-  },
-  getVoucherifyPromotionsDetails: function getVoucherifyPromotionsDetails() {
-    var attr = [];
-    $("#promotion_details").html('');
-    attr.push({
-      'promotion_id': $(".promotion-detail-btn").attr('promotion_id'),
-      'promotion_name': $(".promotion-detail-btn").attr('promotion_name'),
-      'promotion_type': $(".promotion-detail-btn").attr('promotion_type'),
-      'promotion_amount': $(".promotion-detail-btn").attr('promotion_amount'),
-      'promotion_campaign_id': $(".promotion-detail-btn").attr('promotion_campaign_id'),
-      'promotion_redeemed_at': $(".promotion-detail-btn").attr('promotion_redeemed_at')
-    });
-    $.each(attr[0], function (key, val) {
-      var label_name = key.replaceAll('_', ' ');
-      label_name = label_name.toLowerCase().replace(/\b[a-z]/g, function (letter) {
-        return letter.toUpperCase();
-      });
-      $("#promotion_details").append('<label>' + label_name.toUpperCase() + ' : ' + val + '</label>');
-    });
-    $('.voucher_promotion_card_modal').modal('show');
-  }
-};
-
-/***/ }),
-
-/***/ "./resources/js/custom/features/pick_of_the_day.js":
-/*!*********************************************************!*\
-  !*** ./resources/js/custom/features/pick_of_the_day.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-App.PickOfTheDay = {
-  listing: 1,
-  selectedProducts: [],
+App.Office = {
   countIds: [],
-  clearProductSelection: function clearProductSelection() {
-    App.PickOfTheDay.selectedProducts = [];
-    if ($(".cbbox_all_prod").is(':checked')) {
-      $(".cbbox_all_prod").click();
-    }
-  },
-  removeSelectionFilters: function removeSelectionFilters() {
-    $("#store").val('').trigger('change');
-    $("#in_stock").val('').trigger('change');
-    $("#product_status").val('').trigger('change');
-    $("#daterange").val('');
-    App.Helpers.oTable.draw();
-  },
   initializeValidations: function initializeValidations() {
     $("#search-form").validate();
   },
+  removeFilters: function removeFilters(id) {
+    $("#office_reference").val("");
+    $("#office_name").val("");
+    App.Helpers.removeAllfilters(id);
+  },
+  removeSelectionFilters: function removeSelectionFilters() {
+    $("#customer").val("");
+    $("#office_name").val('').trigger('change');
+    App.Helpers.oTable.draw();
+  },
   initializeDataTable: function initializeDataTable() {
-    var table_name = "pim_products";
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.getPickOfTheDayProducts);
+    var table_name = "company_table";
+    var url = App.Helpers.generateApiURL(App.Constants.endPoints.getOffices);
+    var sortColumn = [[2, "desc"]];
     var columns = [{
       data: 'show',
       name: 'show',
       orderable: false,
-      searchable: false
-    }, {
-      data: 'check',
-      name: 'check',
-      orderable: false,
-      searchable: false
-    }, {
-      data: 'sequence',
-      name: 'sequence',
-      className: 'reorder',
-      orderable: false,
-      searchable: false
-    }, {
-      data: "position",
-      name: "position",
+      searchable: false,
+      className: 'show'
+    },
+    // {data: "id", name: "id", orderable: true, searchable: true},
+    {
+      data: "office_name",
+      name: "office_name",
       orderable: true,
       searchable: true
     }, {
-      data: "pick_of_the_day_id",
-      name: "pick_of_the_day_id",
+      data: "office_reference",
+      name: "office_reference",
       orderable: true,
       searchable: true
-    }, {
-      data: "image",
-      name: "image",
-      orderable: false,
-      searchable: false
-    }, {
-      data: "name",
-      name: "name",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "price",
-      name: "price",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "sku",
-      name: "sku",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "store",
-      name: "store",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "imported_id",
-      name: "imported_id",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "created_at",
-      name: "created_at",
-      orderable: true,
-      searchable: false
     }, {
       data: "status",
       name: "status",
       orderable: true,
-      searchable: false
-    }, {
-      data: "in_stock",
-      name: "in_stock",
-      orderable: true,
-      searchable: false
-    }];
-    var postData = function postData(d) {
-      d.id = $("#id").val();
-      d.merchant_company = $("#merchant_company").val();
-      d.name = $("#name").val();
-      d.sku = $("#sku").val();
-      d.price = $("#price").val();
-      d.store = $("#store").val();
-      d.in_stock = $("#in_stock").val();
-      d.status = $("#product_status").val();
-      d.created_at = $("#daterange").val();
-    };
-    var orderColumn = [[3, "asc"]];
-    var searchEnabled = true;
-    App.Helpers.CreateDataTableIns(table_name, url, columns, postData, searchEnabled, orderColumn, [], false, true, 10, 1, true);
-  },
-  initializeReOrder: function initializeReOrder() {
-    var myArray = [];
-    var reOrderRowUrl = App.Helpers.generateApiURL(App.Constants.endPoints.setPickOfTheDayProductsSequence);
-    App.Helpers.oTable.on('row-reorder', function (e, diff, edit) {
-      var filterData = {
-        id: $("#search-form #id").val(),
-        name: $("#search-form #name").val(),
-        sku: $("#search-form #sku").val(),
-        price: $("#search-form #price").val(),
-        store: $("#search-form #store").val(),
-        in_stock: $("#search-form #in_stock").val(),
-        status: $("#search-form #product_status").val(),
-        created_at: $("#search-form #daterange").val()
-      };
-      for (var i = 0, ien = diff.length; i < ien; i++) {
-        var rowData = App.Helpers.oTable.row(diff[i].node).data();
-        myArray.push({
-          id: rowData.id,
-          // record id from datatable
-          position: diff[i].newData
-        });
-      }
-      var requestData = {
-        '_token': App.Constants.CSRF_TOKEN,
-        'positions': myArray,
-        'filters': filterData
-      };
-      var onSuccess = function onSuccess(response) {
-        App.Helpers.refreshDataTable();
-      };
-      var onFail = function onFail(response) {
-        diff = null;
-      };
-      App.Ajax.post(reOrderRowUrl, requestData, onSuccess, onFail, {}, 0);
-    });
-  },
-  saveProduct: function saveProduct(form_id) {
-    var form = $("#" + form_id);
-    var product_id = $("#product :selected").val();
-    if (form.valid()) {
-      var url = App.Helpers.generateApiURL(App.Constants.endPoints.savePickOfTheDayProduct);
-      var onSuccess = function onSuccess() {
-        App.Helpers.refreshDataTable();
-        $("#merchant_store").val('').change();
-        $("#merchant_store option:selected").prop("selected", false);
-        $("#product").find('option').not(':first').remove();
-        $(".modal-product .close-model").click();
-      };
-      var requestData = {
-        'product_id': product_id
-      };
-      App.Ajax.post(url, requestData, onSuccess, false, '', 0);
-    }
-  },
-  bulkUpdateProducts: function bulkUpdateProducts(method_action) {
-    App.PickOfTheDay.countIds = [];
-    $.each($("input[name='data_raw_id[]']:checked"), function () {
-      App.PickOfTheDay.countIds.push($(this).val());
-    });
-    var record_count = 'products';
-    if (App.PickOfTheDay.countIds.length == 1) {
-      record_count = 'product';
-    }
-    if (App.PickOfTheDay.countIds.length == 0) {
-      App.Helpers.selectRowsFirst("Please select at least one product");
-    } else {
-      var action = function action(isConfirm) {
-        if (isConfirm) {
-          if ($(".cbbox_all_prod").is(':checked')) {
-            $(".cbbox_all_prod").click();
-          }
-          var url = App.Helpers.generateApiURL(App.Constants.endPoints.updatePickOfTheDayProducts);
-          var requestData = {
-            "product_ids": App.PickOfTheDay.countIds,
-            "action": method_action
-          };
-          var success = function success(response) {
-            App.Helpers.refreshDataTable();
-            $("#merchant_store").trigger('change');
-            $("#merchant_store option:selected").prop("selected", false);
-          };
-          App.Ajax.post(url, requestData, success, false, {});
-        }
-      };
-      var action_to_be_taken = 'delete';
-      if (method_action == App.Constants.ON) {
-        action_to_be_taken = 'active';
-      } else if (method_action == App.Constants.OFF) {
-        action_to_be_taken = 'inactive';
-      }
-      App.Helpers.confirm('You want to ' + action_to_be_taken + ' selected ' + record_count + '.', action);
-    }
-  },
-  closeModal: function closeModal() {
-    var formFilled = false;
-    if ($("#merchant_store").val() !== '') {
-      formFilled = true;
-    }
-    if (formFilled) {
-      var text = "Your product is not saved, do you want to continue closing the screen?";
-      var action = function action(isConfirm) {
-        if (isConfirm) {
-          $('#set_pick_of_the_day')[0].reset();
-          $(".modal-product").modal('hide');
-          $("#merchant_store").trigger('change');
-          $("#merchant_store option:selected").prop("selected", false);
-          $(".cancel").click();
-        }
-      };
-      App.Helpers.confirm(text, action);
-    } else {
-      $(".modal-product").modal('hide');
-    }
-  },
-  getNonPickOfTheDayProductsByStore: function getNonPickOfTheDayProductsByStore(store_id, product) {
-    var BShopStoreId = App.Constants.BShopStoreId;
-    if (store_id > 0) {
-      var url = App.Helpers.generateApiURL(App.Constants.endPoints.getNonPickOfTheDayProducts);
-      url += store_id;
-      var requestData = {};
-      var onSuccess = function onSuccess(response) {
-        App.Helpers.fileDropdown(product, response, 'Select Product', BShopStoreId);
-      };
-      App.Ajax.get(url, requestData, onSuccess, false, {}, 0);
-    }
-  },
-  editProduct: function editProduct(productID, storeID, status) {
-    $('.update-product').find('#product_id').val(productID);
-    $('.update-product').find('#merchant_store').val(storeID);
-    $('.update-product').find('#status').prop('checked', status);
-    $('#merchant_store').select2();
-    $('.update-product').modal('show');
-  },
-  updateProduct: function updateProduct(method_action) {
-    App.PickOfTheDay.countIds = [];
-    var status = +$('#status').is(':checked');
-    var productID = $('.update-product').find('#product_id').val();
-    if (method_action == undefined) {
-      method_action = status;
-    }
-    var action = function action(isConfirm) {
-      if (isConfirm) {
-        App.PickOfTheDay.countIds.push(productID);
-        var url = App.Helpers.generateApiURL(App.Constants.endPoints.updatePickOfTheDayProducts);
-        var requestData = {
-          "product_ids": App.PickOfTheDay.countIds,
-          "action": method_action
-        };
-        var success = function success(response) {
-          App.Helpers.refreshDataTable();
-          $('.update-product').modal('hide');
-        };
-        App.Ajax.post(url, requestData, success, false, {});
-      }
-    };
-    var action_to_be_taken = 'delete';
-    if (method_action == App.Constants.ON) {
-      action_to_be_taken = 'active';
-    } else if (method_action == App.Constants.OFF) {
-      action_to_be_taken = 'inactive';
-    }
-    App.Helpers.confirm('You want to ' + action_to_be_taken + ' selected product.', action);
-  },
-  selectByStore: function selectByStore() {
-    $('.select-by-store').find('#merchant_store').val('').change();
-    $('.select-by-store').find('#product').val('').change();
-  },
-  importCsv: function importCsv() {
-    var form = $("#import_products_form");
-    if (form.valid()) {
-      var productForm = document.getElementById("import_products_form");
-      var requestData = new FormData(productForm);
-      var onSuccess = function onSuccess() {
-        App.PickOfTheDay.closeUploadModal();
-        App.Helpers.refreshDataTable();
-      };
-      var url = App.Helpers.generateApiURL(App.Constants.endPoints.importPickOfTheDayProducts);
-      if (App.Helpers.uploadedFile) {
-        requestData.append('import_file', App.Helpers.uploadedFile);
-      }
-      App.Ajax.post(url, requestData, onSuccess, false, 'upload_file', 0);
-    }
-  },
-  closeUploadModal: function closeUploadModal() {
-    $('#import_products_form')[0].reset();
-    $('.upload-file-btn').attr('disabled', true);
-    $(".import-products").modal('hide');
-    $('.fileUploadMessages').html('');
-    App.Helpers.uploadedFile = null;
-  },
-  exportProducts: function exportProducts() {
-    var exportType = $('input[name="export_type"]:checked').val();
-    if (exportType == 'all_products') {
-      App.PickOfTheDay.selectedProducts = [];
-    } else if (exportType == 'current_page') {
-      App.PickOfTheDay.selectedProducts = [];
-      $('.pod-product-id').each(function () {
-        var currentRow = $(this);
-        App.PickOfTheDay.selectedProducts.push(currentRow.data('id'));
-      });
-    } else if (exportType == 'selected_products') {
-      App.PickOfTheDay.selectedProducts = [];
-      $('.theClass').each(function () {
-        if ($(this).is(":checked")) {
-          App.PickOfTheDay.selectedProducts.push($(this).val());
-        }
-      });
-      if (App.PickOfTheDay.selectedProducts == '') {
-        App.Helpers.showErrorMessage({
-          'error': 'Please select at least one product'
-        });
-        return false;
-      }
-    }
-    var id = $("#id").val();
-    var name = $("#name").val();
-    var sku = $("#sku").val();
-    var price = $("#price").val();
-    var store = $("#store").val();
-    var in_stock = $("#in_stock").val();
-    var status = $("#product_status").val();
-    var created_at = $("#daterange").val();
-    var selected_products = JSON.stringify(App.PickOfTheDay.selectedProducts);
-    var query_string = '?id=' + id + '&name=' + name + '&sku=' + sku + '&price=' + price + '&store=' + store + '&created_at=' + created_at + '&in_stock=' + in_stock + '&status=' + status + "&selected_products=" + selected_products;
-    window.open('' + App.Constants.endPoints.exportPickOfTheDayProducts + query_string, '_blank');
-    $('.export-pod-products').modal('hide');
-  }
-};
-
-/***/ }),
-
-/***/ "./resources/js/custom/features/products.js":
-/*!**************************************************!*\
-  !*** ./resources/js/custom/features/products.js ***!
-  \**************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-App.Products = {
-  listing: 1,
-  selectedProducts: [],
-  countIds: [],
-  syncInProgress: App.Constants.OFF,
-  attributeSection: 1,
-  isImported: App.Constants.OFF,
-  setNoListing: function setNoListing() {
-    App.Products.listing = App.Constants.OFF;
-    var store_id = $("#merchant_store").val();
-    $(".remove_id").val(store_id);
-    $("#store_id").val(store_id);
-    $("#form_product_add .remove_id").trigger('change');
-  },
-  clearProductSelection: function clearProductSelection() {
-    App.Products.selectedProducts = [];
-    if ($(".cbbox_all_prod").is(':checked')) {
-      $(".cbbox_all_prod").click();
-    }
-  },
-  changeStore: function changeStore(store_id) {
-    App.Products.countIds = [];
-    App.Products.selectedProducts = [];
-    App.Helpers.refreshDataTable();
-  },
-  setDefaultJourney: function setDefaultJourney(form_id) {
-    var journey_id = $("#" + form_id + " .store_id option:selected").attr('data-joureny_id');
-    var quantity = $("#" + form_id + " .store_id option:selected").attr('data-quantity');
-    if (quantity == undefined) {
-      quantity = $("#merchant_store option:selected").attr("data-quantity");
-    }
-    $("#" + form_id + " #max_quantity").attr('max', quantity);
-    $("#" + form_id + " #item-img-output").attr('src', App.Constants.IMAGE_PLACEHOLDER);
-    $("#" + form_id + " #journey_id").val(journey_id);
-    $("#" + form_id + " #max_quantity").val(quantity);
-    $('#' + form_id + ' .select2').select2();
-    App.Constants.CROPPER_PARENT_ID = form_id;
-  },
-  editProduct: function editProduct(product_id) {
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.editMerchantProductBySku);
-    var onSuccess = function onSuccess(response) {
-      $("#product_modal_wrapper").html(response.render_html);
-      $("#btn_prodoct_detail").trigger('click');
-      App.Products.setAdditionalNotesCount('form_product_update');
-    };
-    var requestData = {
-      'product_id': product_id
-    };
-    App.Ajax.get(url, requestData, onSuccess, false, {}, 0);
-  },
-  getLocationSubCategory: function getLocationSubCategory(form_type, category_id) {
-    var form_id = 'form_product_' + form_type;
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.getLocationSubCategory);
-    var onSuccess = function onSuccess(response) {
-      App.Helpers.fileDropdown(form_id + ' #location_subcategory_id', response, 'Select Subcategory', '');
-    };
-    var requestData = {
-      'category_id': category_id
-    };
-    App.Ajax.get(url, requestData, onSuccess, false, {}, 0);
-  },
-  initializeValidations: function initializeValidations() {
-    $("#search-form").validate();
-    $("#form_product_add").validate();
-    $("#form_product_update").validate();
-    $('[data-toggle="tooltip"]').tooltip();
-    $('.select2').select2();
-    $(".cbbox_all_prod").click(function () {
-      if ($(this).is(":checked")) {
-        $(".theClass").not(":disabled").each(function () {
-          App.Products.selectedProducts.push($(this).val());
-        });
-      } else {
-        App.Products.selectedProducts = [];
-      }
-    });
-    $(document).on("click", ".theClass", function () {
-      if ($(this).is(":checked")) {
-        App.Products.selectedProducts.push($(this).val());
-      } else {
-        App.Products.selectedProducts.splice($.inArray($(this).val(), App.Products.selectedProducts), 1);
-      }
-    });
-  },
-  removeFilters: function removeFilters() {
-    $("#product_id").val('').trigger('change');
-    $("#is_imported").val('').trigger('change');
-    $("#imported_product_id").val('');
-    $("#name").val("");
-    $("#category_name").val("").trigger('change');
-    $("#product_delivery_type_filter ").val("").trigger('change');
-    $("#sku").val("");
-    $("#price").val("");
-    $("#discount").val('');
-    $("#delivery_time").val('');
-    $("#in_stock").val('').trigger('change');
-    $("#journey").val('');
-    $("#store").val('').trigger('change');
-    $("#created_by").val('').trigger('change');
-    $("#daterange").val('');
-    App.Helpers.removeAllfilters();
-  },
-  removeSelectionFilters: function removeSelectionFilters() {
-    $("#store").val('').trigger('change');
-    $("#category_name").val("").trigger('change');
-    $("#product_delivery_type_filter ").val("").trigger('change');
-    $("#in_stock").val('').trigger('change');
-    $("#is_imported").val('').trigger('change');
-    $("#daterange").val('');
-    App.Helpers.oTable.draw();
-  },
-  initializeDataTable: function initializeDataTable() {
-    var table_name = "pim_products";
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.getMerchantProducts);
-    var columns = [{
-      data: 'show',
-      name: 'show',
-      orderable: false,
-      searchable: false
-    }, {
-      data: 'check',
-      name: 'check',
-      orderable: false,
-      searchable: false
-    }, {
-      data: "product_id",
-      name: "product_id",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "name",
-      name: "name",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "category_name",
-      name: "category_name",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "image",
-      name: "image",
-      orderable: false,
-      searchable: false
-    }, {
-      data: "store",
-      name: "store",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "is_imported",
-      name: "is_imported",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "imported_product_id",
-      name: "imported_product_id",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "sku",
-      name: "sku",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "price",
-      name: "price",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "size",
-      name: "size",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "max_quantity",
-      name: "max_quantity",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "delivery_time",
-      name: "delivery_time",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "product_delivery_type",
-      name: "product_delivery_type",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "in_stock",
-      name: "in_stock",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "journey",
-      name: "journey",
-      orderable: true,
-      searchable: true
-    }, {
-      data: "created_by",
-      name: "created_by",
-      orderable: true,
       searchable: true
     }, {
       data: "created_at",
@@ -69764,508 +67627,114 @@ App.Products = {
       orderable: true,
       searchable: true
     }, {
-      data: "short_description",
-      name: "short_description",
-      orderable: false,
-      searchable: false
+      data: "updated_at",
+      name: "updated_at",
+      orderable: true,
+      searchable: true
     }];
     var postData = function postData(d) {
-      d.product_id = $("#product_id").val();
-      d.name = $("#name").val();
-      d.category_name = $("#category_name").val();
-      d.sku = $("#sku").val();
-      d.price = $("#price").val();
-      d.discount = $("#discount").val();
-      d.delivery_time = $("#delivery_time").val();
-      d.product_delivery_type = $("#product_delivery_type_filter").val();
-      d.in_stock = $("#in_stock").val();
-      d.is_imported = $("#is_imported").val();
-      d.imported_product_id = $("#imported_product_id").val();
-      d.journey = $("#journey").val();
-      d.store = $("#store").val();
-      d.created_by = $("#created_by").val();
-      d.created_at = $("#daterange").val();
+      d.office_name = $("#office_name").val();
+      d.office_reference = $("#office_reference").val();
     };
-    var orderColumn = [[2, "desc"]];
+    var orderColumn = sortColumn;
     var searchEnabled = true;
-    App.Helpers.CreateDataTableIns(table_name, url, columns, postData, searchEnabled, orderColumn, [], false, true, 10, 1);
+    App.Helpers.CreateDataTableIns(table_name, url, columns, postData, searchEnabled, orderColumn, [], true);
   },
-  createManualOrder: function createManualOrder() {
-    var store_id = $.trim($("#search-form #store").val());
-    var multi_store_products_selected = false;
-    var last_store_id = '';
-    $.each($("input[name='data_raw_id[]']:checked"), function () {
-      var store_id = $(this).attr('data-store');
-      if (last_store_id != '' && store_id != last_store_id) {
-        multi_store_products_selected = true;
-      }
-      last_store_id = store_id;
-    });
-    if (App.Products.selectedProducts.length < App.Constants.ON) {
-      App.Helpers.selectRowsFirst("Please select at least one product.");
-    } else if (multi_store_products_selected) {
-      App.Helpers.selectRowsFirst("Please select same store products to create order.");
-    } else {
-      if ($('.prod_disabled').is(':checked')) {
-        App.Helpers.selectRowsFirst("Please uncheck NOT AVAILABLE products to proceed!");
-      } else {
-        if (store_id == '') {
-          store_id = $(".theClass:checked:first").attr('data-store');
-        }
-        $("#form_product_ids #store_id").val(store_id);
-        $("#form_product_ids #product_ids").val(App.Products.selectedProducts);
-        $("#btn_form_product_ids").click();
-      }
-    }
+  initializeOfficeEmployeeDataTable: function initializeOfficeEmployeeDataTable(ref) {
+    var table_name = "office_employees_table";
+    var url = App.Helpers.generateApiURL(App.Constants.endPoints.getOfficesEmployees) + "/" + ref;
+    var sortColumn = [[2, "desc"]];
+    var columns = [{
+      data: 'check',
+      name: 'check',
+      orderable: false,
+      searchable: false,
+      className: 'show'
+    }, {
+      data: "name",
+      name: "name",
+      orderable: true,
+      searchable: true
+    }, {
+      data: "username",
+      name: "username",
+      orderable: true,
+      searchable: false
+    }, {
+      data: "email",
+      name: "email",
+      orderable: true,
+      searchable: false
+    }, {
+      data: "phone",
+      name: "phone",
+      orderable: true,
+      searchable: true
+    }, {
+      data: "country",
+      name: "country",
+      orderable: true,
+      searchable: true
+    }, {
+      data: "status",
+      name: "status",
+      orderable: true,
+      searchable: true
+    }];
+    var postData = function postData(d) {
+      // d.customer = $("#customer").val();
+      // d.office_name = $("#office_name").val();
+    };
+    var orderColumn = sortColumn;
+    var searchEnabled = true;
+    App.Helpers.CreateDataTableIns(table_name, url, columns, postData, searchEnabled, orderColumn, [], true);
   },
-  saveProduct: function saveProduct(action) {
-    var form = $("#form_product_" + action);
-    App.Products.setDiscountMinimum('form_product_' + action);
-    var prod_size = $("#prod_size").val();
-    if (prod_size == '') {
-      $('#collapseOne').addClass('show');
-      $('html').animate({
-        scrollTop: $("#collapseOne").offset().top
-      }, 'slow');
-    }
-    if (form.valid()) {
-      var url = App.Helpers.generateApiURL(App.Constants.endPoints.saveMerchantProduct);
-      var prod_price = $("#form_product_" + action + " #prod_price").val();
-      var prod_discount = $("#form_product_" + action + " #prod_discount").val();
-      var discount_type = $("#form_product_" + action + " #discount_type").val();
-      prod_price = parseInt(prod_price);
-      prod_discount = parseInt(prod_discount);
-      if (prod_discount > prod_price && discount_type == App.Constants.ON) {
-        swal("Warning!", 'Discount can not be greater than product price.', "warning");
-        return false;
-      }
-      if (discount_type != App.Constants.ON && prod_discount > 100) {
-        swal("Warning!", 'Discount can not be set greater than 100%.', "warning");
-        return false;
-      }
-      var onSuccess = function onSuccess(response) {
-        if (App.Products.listing === App.Constants.OFF) {
-          var sku = $("#created_sku").val();
-          $("#txt_sku_search").val($.trim(sku));
-          $("#btn_get_local_product").click();
-          $('#form_product_add #brandverseImage').val('');
-          $('#form_product_update #brandverseImage').val('');
-          form[0].reset();
-          setTimeout(function () {
-            $(".modal-product .close").click();
-          }, 100);
-        } else {
-          if (action == 'add' && response.product_id) {
-            window.location = "/products/" + response.product_id + "/edit";
-          } else {
-            window.location = "/products";
+  createOfficeFormBinding: function createOfficeFormBinding() {
+    $("#create-user").bind("click", function (e) {
+      if ($("#office_create_form").valid()) {
+        var url = App.Helpers.generateApiURL(App.Constants.endPoints.createOffice);
+        var onSuccess = function onSuccess(data) {
+          console.log("success: ", data);
+          if (data.type == "success") {
+            window.location.href = '/office';
+            App.Helpers.showSuccessMessage(data.message);
           }
-        }
-      };
-      var productForm = document.getElementById("form_product_" + action);
-      var requestData = new FormData(productForm);
-      requestData.append('is_imported', App.Products.isImported);
-      App.Ajax.post(url, requestData, onSuccess, false, 'upload_file', 0);
-    }
-  },
-  togglePurchaseLimit: function togglePurchaseLimit(value) {
-    if (value != App.Constants.ON) {
-      $("#merchant_product_settings_form #wrapper_max_purchase_limt").show();
-      $("#merchant_product_settings_form #wrapper_max_purchase_limt input").attr('required', true);
-    } else {
-      $("#merchant_product_settings_form #wrapper_max_purchase_limt input").attr('required', false);
-      $("#merchant_product_settings_form #wrapper_max_purchase_limt input").removeAttr('required');
-      $("#merchant_product_settings_form #wrapper_max_purchase_limt").hide();
-    }
-  },
-  saveMerchantBuyerProtectionSettings: function saveMerchantBuyerProtectionSettings(form_id) {
-    var form = $("#" + form_id);
-    var buyerProtection = $("#buyer_protection_info").val();
-    var defaultBuyerProtection = $("#defaultBuyerProtectionCheck").val();
-    if (form.valid()) {
-      var url = App.Helpers.generateApiURL(App.Constants.endPoints.saveMerchantBuyerProtectionSettings);
-      var requestData = form.serialize();
-      if (buyerProtection !== defaultBuyerProtection) {
-        $(".modal_checkout_btn").modal('show');
+        };
+        var requestData = $("#office_create_form").serialize();
+        App.Ajax.post(url, requestData, onSuccess, false, {});
       }
-      var onSuccess = function onSuccess(response) {
-        $("#defaultBuyerProtectionCheck").val(response[App.Constants.OFF].buyer_protection_info);
-        if (buyerProtection !== defaultBuyerProtection) {
-          App.Products.setCheckoutButtonCockpit();
-        }
-      };
-      App.Ajax.post(url, requestData, onSuccess, false, false);
-    }
+    });
   },
-  saveMerchantProductSettings: function saveMerchantProductSettings(form_id) {
-    var form = $("#" + form_id);
-    if (form.valid()) {
-      var url = App.Helpers.generateApiURL(App.Constants.endPoints.saveMerchantProductSettings);
-      var requestData = form.serialize();
-      var onSuccess = function onSuccess(response) {};
-      App.Ajax.post(url, requestData, onSuccess, false, false);
-    }
+  editEmployeeFormBinding: function editEmployeeFormBinding(userId) {
+    $("#customer-user").bind("click", function (e) {
+      if ($("#office_edit_form").valid()) {
+        var url = App.Helpers.generateApiURL(App.Constants.endPoints.editEmployee + "/" + userId);
+        var onSuccess = function onSuccess() {
+          if (data.type == "success") {
+            window.location.href = '/offices';
+            App.Helpers.showSuccessMessage(data.message);
+          }
+        };
+        var requestData = $("#customer_edit_form").serialize();
+        App.Ajax.post(url, requestData, onSuccess, false, {});
+      }
+    });
   },
-  buyerProtectionToggle: function buyerProtectionToggle(element, merchant_id) {
-    var check = App.Constants.OFF;
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.getCheckoutBtnAgainstCheck);
-    var storeIds = JSON.parse($("#merchant_stores_ids").val());
-    var length = storeIds.length;
-    if (element.is(':checked')) {
-      element.val(App.Constants.ON);
-      check = App.Constants.ON;
-    } else {
-      element.val(App.Constants.OFF);
-      check = App.Constants.OFF;
-    }
-    var onSuccess = function onSuccess(response) {
-      $.each(storeIds, function (index, store_id) {
-        $('#save_checkout_btn_form #checkoutBtn_' + store_id).html(response.merchantCheckoutBtnBranding[index].default_checkout_btn_source_code);
-      });
-    };
-    var requestData = {
-      'merchant_id': merchant_id,
-      'buyer_protection_check': check
-    };
-    App.Ajax.post(url, requestData, onSuccess, false, {}, 0);
-  },
-  setCheckoutButtonCockpit: function setCheckoutButtonCockpit(check) {
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.saveMerchantCheckoutButtons);
-    var storeIds = JSON.parse($("#merchant_stores_ids").val());
-    var length = storeIds.length;
-    var merchant_id = $("[name=merchant_id]").val();
-    var imageData = [];
-    var modalCloseCheck = false;
-    $.each(storeIds, function (index, store_id) {
-      var button = document.querySelector("#checkoutBtn_" + store_id + " .checkout_btn_container");
-      domtoimage.toPng(button).then(function (dataUrl) {
+  updateEmployeeStatus: function updateEmployeeStatus(thisKey, customerId) {
+    var customerStatusValue = $(thisKey).find(':selected').text();
+    var action = function action(isConfirm) {
+      if (isConfirm) {
+        var customerStatus = $(thisKey).val();
+        var onSuccess = function onSuccess(response) {};
         var requestData = {
-          'store_id': store_id,
-          'merchant_id': merchant_id,
-          'image_data_url': dataUrl,
-          'checkout_btn_text': $("#checkout_btn_title_" + store_id).val(),
-          'checkout_btn_style': $("#checkout_btn_styles_" + store_id).val(),
-          'checkout_btn_source_code': $("#source_code_checkout_btn_" + store_id).val()
+          'customer_status': customerStatus,
+          'customer_id': customerId
         };
-        imageData.push(requestData);
-        var onSuccess = function onSuccess(response) {
-          if (modalCloseCheck) {
-            $(".modal_checkout_btn").modal('hide');
-          }
-        };
-        if (index === length - 1) {
-          var request = {
-            'data': JSON.stringify(imageData)
-          };
-          modalCloseCheck = true;
-          App.Ajax.post(url, request, onSuccess, false, {}, 0);
-        }
-      })["catch"](function (error) {
-        console.error('oops, something went wrong!', error);
-      });
-    });
-  },
-  bulkUpdateProducts: function bulkUpdateProducts(method_action) {
-    App.Products.countIds = [];
-    $.each($("input[name='data_raw_id[]']:checked"), function () {
-      App.Products.countIds.push($(this).val());
-    });
-    var record_count = 'products';
-    if (App.Products.countIds.length == 1) {
-      record_count = 'product';
-    }
-    if (App.Products.countIds.length == 0) {
-      App.Helpers.selectRowsFirst("Please select at least one product");
-    } else {
-      var action = function action(isConfirm) {
-        if (isConfirm) {
-          if ($(".cbbox_all_prod").is(':checked')) {
-            $(".cbbox_all_prod").click();
-          }
-          var url = App.Helpers.generateApiURL(App.Constants.endPoints.updateMerchantProducts);
-          var requestData = {
-            "delete_ids": App.Products.countIds,
-            "action": method_action
-          };
-          var success = function success(response) {
-            App.Helpers.refreshDataTable();
-          };
-          App.Ajax.post(url, requestData, success, false, {});
-        }
-      };
-      var action_to_be_taken = 'delete';
-      if (method_action == 1) {
-        action_to_be_taken = 'mark as available';
-      } else if (method_action == 0) {
-        action_to_be_taken = 'mark as NOT available';
-      }
-      App.Helpers.confirm('You want to ' + action_to_be_taken + ' selected ' + record_count + '.', action);
-    }
-  },
-  closeModal: function closeModal() {
-    if (App.Products.listing == App.Constants.OFF) {
-      $("#store_id").val('');
-      $("#store_id_hidden").val('');
-    }
-    var formFilled = false;
-    $('#form_product_add input').each(function () {
-      if ($(this).val() !== '') {
-        formFilled = true;
-      }
-    });
-    if (formFilled) {
-      var text = "Your Product is not saved, do you want to continue closing the screen?";
-      var action = function action(isConfirm) {
-        if (isConfirm) {
-          $('#form_product_add')[0].reset();
-          $(".modal-product").modal('hide');
-          $(".cancel").click();
-        }
-      };
-      App.Helpers.confirm(text, action);
-    } else {
-      $(".modal-product").modal('hide');
-    }
-  },
-  checkValue: function checkValue(form_id) {
-    var value = $("#" + form_id + " #prod_discount").val();
-    var discount_type = $("#" + form_id + " #discount_type").val();
-    var element = $("#" + form_id + " .currency-code");
-    if (discount_type != App.Constants.ON && value >= 100) {
-      $("#prod_discount").val(99);
-    }
-    if (discount_type != App.Constants.ON) {
-      if (element.parent().hasClass('textWithField')) {
-        element.parent().removeClass('textWithField');
-      }
-      element.hide();
-      $('#cap_amount').attr('disabled', false);
-      $('.cap-amount').show();
-    } else {
-      element.show();
-      if (!element.parent().hasClass('textWithField')) {
-        element.parent().addClass('textWithField');
-      }
-      $('#cap_amount').attr('disabled', true);
-      $('.cap-amount').hide();
-    }
-  },
-  setDiscountMinimum: function setDiscountMinimum(form_id) {
-    var discount_type = $("#" + form_id + " #discount_type").val();
-    if ($("#" + form_id + " #prod_discount").val()) {
-      if (discount_type != App.Constants.ON) {
-        $("#" + form_id + " #prod_discount").prop('max', 99);
-      } else {
-        var price = $("#" + form_id + " #prod_price").val();
-        if (price && price != 0) {
-          $("#" + form_id + " #prod_discount").prop('max', price - 1);
-        }
-      }
-    }
-  },
-  publishCatalog: function publishCatalog() {
-    var action = function action(isConfirm) {
-      if (isConfirm) {
-        var url = App.Helpers.generateApiURL(App.Constants.endPoints.publishCatalog);
-        var requestData = {};
-        var success = function success(response) {
-          App.Helpers.refreshDataTable();
-        };
-        App.Ajax.post(url, requestData, success, false, {});
+        var url = App.Helpers.generateApiURL(App.Constants.endPoints.updateEmployeeStatus);
+        App.Ajax.post(url, requestData, onSuccess, false, '', 0);
       }
     };
-    App.Helpers.confirm('You want to publish catalog', action);
-  },
-  productPurchaseChange: function productPurchaseChange(formId, thisKey) {
-    if ($(thisKey).prop('checked')) {
-      $("#".concat(formId, " #location_category_id")).prop('required', true);
-    } else {
-      $("#".concat(formId, " #location_category_id")).prop('required', false);
-      $("#".concat(formId, " #location_category_id")).removeClass('error');
-      $("#".concat(formId, " #location_category_id-error")).hide();
-    }
-  },
-  setAdditionalNotesCount: function setAdditionalNotesCount(formId) {
-    var totalCount = $("#".concat(formId, " #text_note_for_shipment")).attr('maxLength');
-    var currentCount = 0;
-    if ($("#".concat(formId, " #text_note_for_shipment")).val()) {
-      currentCount = $("#".concat(formId, " #text_note_for_shipment")).val().length;
-    }
-    $("#".concat(formId, " #additional_note_count")).html(currentCount + '/' + totalCount);
-  },
-  redirectEditProduct: function redirectEditProduct(productId) {
-    window.open('/products/' + productId + '/edit', '_self');
-  },
-  syncPIM: function syncPIM() {
-    var action = function action(isConfirm) {
-      if (isConfirm) {
-        var url = App.Helpers.generateApiURL(App.Constants.endPoints.syncPIM);
-        var requestData = {};
-        var success = function success(response) {
-          if (response.syncInProgress == App.Constants.ON) {
-            App.Products.syncInProgress = App.Constants.ON;
-            $('#pimInProgress').show();
-            $('#syncPim').hide();
-          }
-        };
-        App.Ajax.post(url, requestData, success, false, {});
-      }
-    };
-    App.Helpers.confirm('You want to sync PIM products', action);
-  },
-  uploadProductImages: function uploadProductImages() {
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.uploadProductImages);
-    var onSuccess = function onSuccess(response) {
-      if (response) {
-        $('#images-products').append(response);
-        if (!$('#images-products .defaultImageButton').is(":checked")) {
-          $('#images-products .defaultImageButton').attr('checked', true);
-        }
-        $('#' + App.Constants.CROPPER_PARENT_ID + ' #item-img-output').attr('src', App.Constants.IMAGE_PLACEHOLDER);
-        $('#' + App.Constants.CROPPER_PARENT_ID + ' #cropped_image').val(App.Constants.IMAGE_PLACEHOLDER);
-      }
-    };
-    var uploadForm = document.getElementById(App.Constants.CROPPER_PARENT_ID);
-    var requestData = new FormData(uploadForm);
-    App.Ajax.post(url, requestData, onSuccess, false, 'upload_file', 0);
-  },
-  addNewVariant: function addNewVariant(productId) {
-    App.Products.attributeSection += 1;
-    var url = App.Helpers.generateApiURL(App.Constants.endPoints.getVariantAttributeSection);
-    var onSuccess = function onSuccess(response) {
-      $("#wrapper-varaint-options").append(response);
-      for (var count = 1; count < App.Products.attributeSection; count++) {
-        var previousValue = $("#attribute_" + count + " option:selected").val();
-        $("#attribute_" + App.Products.attributeSection + " option[value='" + previousValue + "']").remove();
-      }
-      $(".attributeSelect").select2({
-        tags: true
-      });
-      $(".optionSelect").select2({
-        tags: true,
-        tokenSeparators: [',']
-      });
-      $("#attribute_" + App.Products.attributeSection).trigger('change');
-      if (App.Products.attributeSection == App.Constants.maximumAttributeSection) {
-        $('#form_variant_add .addNewVariantBtn').addClass('out_of_screen');
-      }
-      $('#form_variant_add').validate();
-    };
-    var requestData = {
-      'section': App.Products.attributeSection,
-      'productId': productId
-    };
-    App.Ajax.get(url, requestData, onSuccess, false, {}, 0);
-  },
-  saveAttribute: function saveAttribute() {
-    var form = $('#form_variant_add');
-    var valid = true;
-    for (var i = 2; i <= $('.nameVariantOption').length; i++) {
-      var field = $('#attribute_' + i);
-      var wrap = $('select#attribute_' + i).closest('.select2Wrap');
-      var err = wrap.find('.error');
-      if (field.length > 0 && field.val() == null) {
-        valid = false;
-        if (err.length == 0) {
-          wrap.prepend('<span class="error" >This field is required.</span>');
-        }
-      } else {
-        valid = true;
-        err.remove();
-      }
-    }
-    if (form.valid() && valid) {
-      var url = App.Helpers.generateApiURL(App.Constants.endPoints.saveAttributeOptions);
-      var onSuccess = function onSuccess(response) {
-        if (response) {
-          $("#all-variant").html(response);
-        }
-      };
-      var requestData = form.serialize();
-      App.Ajax.post(url, requestData, onSuccess, false, {}, 0);
-    }
-  },
-  saveVariants: function saveVariants() {
-    var form = $('#form_variant_save');
-    var has_variants = App.Constants.OFF;
-    if (form.valid()) {
-      var url = App.Helpers.generateApiURL(App.Constants.endPoints.saveVariants);
-      var onSuccess = function onSuccess(response) {
-        window.location = "/products";
-      };
-      if ($("#enable_variants").is(':checked')) {
-        has_variants = App.Constants.ON;
-      }
-      var requestData = form.serialize() + '&has_variants=' + has_variants;
-      App.Ajax.post(url, requestData, onSuccess, false, {}, 0);
-    }
-  },
-  getAttributeOptions: function getAttributeOptions(thisKey, section, productId) {
-    var selected = $(thisKey).find('option:selected');
-    var id = selected.data('id');
-    if (id) {
-      var url = App.Helpers.generateApiURL(App.Constants.endPoints.getAttributeOptions);
-      var onSuccess = function onSuccess(response) {
-        if (response.options) {
-          $('#option_' + section).html(' ');
-          $.each(response.options, function (key, value) {
-            if (response.selected_options) {
-              var selected = '';
-              if (key in response.selected_options) {
-                selected = 'selected';
-              }
-            }
-            $('#option_' + section).append($("<option " + selected + "></option>").attr("value", value).text(value));
-          });
-          $(".optionSelect").select2({
-            tags: true,
-            tokenSeparators: [',']
-          });
-        }
-      };
-      var requestData = {
-        'attribute_id': id,
-        'productId': productId
-      };
-      App.Ajax.get(url, requestData, onSuccess, false, {}, 0);
-    }
-  },
-  openVarinatImageModal: function openVarinatImageModal(key) {
-    $('#select-image-form #variantKey').val(key);
-  },
-  selectVariantImage: function selectVariantImage() {
-    var imageId = $('#select-image-form input[name="image_id"]:checked').val();
-    var key = $('#select-image-form #variantKey').val();
-    var url = $("#select-image-form #product_image_" + imageId + " #product_image").attr('src');
-    $('#form_variant_save #variant-image-' + key + ' #item-img-output').attr('src', url);
-    $('#form_variant_save #image-id-' + key).val(imageId);
-    $('.modal .close').click();
-  },
-  deleteAttribute: function deleteAttribute(section) {
-    $('#wrapper-varaint-options').find('.' + section).remove();
-    App.Products.attributeSection -= 1;
-    if ($('.nameVariantOption').length <= 2) {
-      $('#form_variant_add .addNewVariantBtn').removeClass('out_of_screen');
-      if ($('#form_variant_save').length > 0) {
-        $('#saveAttribute').trigger('click');
-      }
-    }
-  },
-  exportProducts: function exportProducts() {
-    var product_id = $("#product_id").val();
-    var name = $("#name").val();
-    var imported_product_id = $("#imported_product_id").val();
-    var sku = $("#sku").val();
-    var created_by = $("#created_by").val();
-    var store = $("#store").val();
-    var category_name = $("#category_name").val();
-    var product_delivery_type_filter = $("#product_delivery_type_filter").val();
-    var in_stock = $("#in_stock").val();
-    var is_imported = $("#is_imported").val();
-    var daterange = $("#daterange").val();
-    var selected_products = JSON.stringify(App.Products.selectedProducts);
-    var query_string = '?product_id=' + product_id + '&name=' + name + '&imported_product_id=' + imported_product_id + '&sku=' + sku + '&created_by=' + created_by + '&store=' + store + '&category_name=' + category_name + '&product_delivery_type_filter=' + product_delivery_type_filter + '&in_stock=' + in_stock + '&is_imported=' + is_imported + '&daterange=' + daterange + "&selected_products=" + selected_products;
-    window.open('' + App.Constants.endPoints.exportProducts + query_string, '_blank');
+    App.Helpers.confirm('You want to mark selected customer as ' + customerStatusValue.toLowerCase() + '.', action);
   }
 };
 
@@ -70671,14 +68140,21 @@ App.Constants = {
     'changeUserStatus': '/user-change-status',
     'editUser': "/users/edit",
     'bulkDeleteUsers': "/users-delete/selected",
-    'getCustomers': '/customers-list',
+    'getEmployees': '/employees-list',
+    'createEmployee': '/employees-save',
     'editCustomer': '/customer/edit',
-    'getClosets': '/closet-list',
-    'getClosetsProducts': '/closet-product-list/',
-    'getClosetsProductDetail': '/closet/product/detail/',
-    'updateClosetTrendingStatus': '/closet/change-trending-status',
-    'updateClosetProductStatus': '/closet/product/change-status',
-    'updateClosetProductFeaturedStatus': '/closet/product/change-featured-status'
+    'getOffices': '/office-list',
+    'createOffice': '/office-save',
+    'getOfficesEmployees': "/office/all-employee",
+    'createCompany': '/company-save',
+    'getCompanies': '/company-list',
+    'editCompany': "/company/edit",
+    'getCompanyAllOffices': "/company/all-offices",
+    'getCompanyAllEmployees': "/company/all-employee",
+    'editOffice': "/office/edit",
+    'updateOfficeTrendingStatus': '/office/change-trending-status',
+    'updateOfficeProductStatus': '/office/product/change-status',
+    'updateOfficeProductFeaturedStatus': '/office/product/change-featured-status'
   },
   user_type: {
     1: 'Admin'
@@ -92358,7 +89834,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         }
       }), this.uiDialogTitlebarClose = t("<button type='button'></button>").button({
         label: t("<a>").text(this.options.closeText).html(),
-        icon: "ui-icon-closethick",
+        icon: "ui-icon-officehick",
         showLabel: !1
       }).appendTo(this.uiDialogTitlebar), this._addClass(this.uiDialogTitlebarClose, "ui-dialog-titlebar-close"), this._on(this.uiDialogTitlebarClose, {
         click: function click(t) {
@@ -110526,8 +108002,8 @@ if (version[0] <= 2 && version[1] < 17 || version[0] >= 3) throw new Error("Temp
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\laragon\www\PuraniJeans\resources\js\admin.js */"./resources/js/admin.js");
-module.exports = __webpack_require__(/*! D:\laragon\www\PuraniJeans\resources\css\init.scss */"./resources/css/init.scss");
+__webpack_require__(/*! D:\laragon\www\MSR-RSM\resources\js\admin.js */"./resources/js/admin.js");
+module.exports = __webpack_require__(/*! D:\laragon\www\MSR-RSM\resources\css\init.scss */"./resources/css/init.scss");
 
 
 /***/ })

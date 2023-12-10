@@ -12347,7 +12347,7 @@ $.widget( "ui.dialog", {
 		this.uiDialogTitlebarClose = $( "<button type='button'></button>" )
 			.button( {
 				label: $( "<a>" ).text( this.options.closeText ).html(),
-				icon: "ui-icon-closethick",
+				icon: "ui-icon-officehick",
 				showLabel: false
 			} )
 			.appendTo( this.uiDialogTitlebar );

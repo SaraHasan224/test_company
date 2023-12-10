@@ -9,6 +9,6 @@ class Token extends PassportToken
 
     public function customer()
     {
-        return $this->hasOne(Customer::class,'id', 'user_id' );
+        return $this->hasOne(Employee::class,'id', 'user_id' );
     }
 }

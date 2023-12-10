@@ -80,43 +80,56 @@
                         </li>
                     </ul>
                 </li>
-                <li class="app-sidebar__heading">Manage Puraani Jeans Website</li>
+                <li class="app-sidebar__heading">Manage RSM Website</li>
+                <li class="{{ (Request::is('company') ||  Request::is('company')) ? 'mm-active' : '' }}">
+                    <a href="{{ URL::to('/company') }}">
+                        <i class="metismenu-icon pe-7s-safe"></i>
+                        Company
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+                    <ul class="{{
+                     (Request::is('company') ||  Request::is('/company')) ||
+                     (Request::is('company.add') ||  Request::is('/company/add'))
+                     ? 'mm-active' : '' }}">
+                        <li>
+                            <a href="{{ URL::to('/company') }}">
+                                <i class="metismenu-icon">
+                                </i>View All
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="
-                {{  (Request::is('closet') ||  Request::is('/closet')) ||
-                    (Request::is('closet-orders') ||  Request::is('/closet/orders')) ||
-                    (Request::is('closet-pim') ||  Request::is('/closet/pim')) ||
-                    (Request::is('customers') ||  Request::is('/customers'))
-                ? 'mm-active' : '' }}">
+                {{  (Request::is('office') ||  Request::is('/office')) ||
+                    (Request::is('employees') ||  Request::is('/employees'))
+                ? 'mm-active d-none' : 'd-none' }}">
                     <a href="#">
                         <i class="metismenu-icon pe-7s-diamond"></i>
                         Application
                         <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                     </a>
                     <ul class="
-                        {{  (Request::is('closet') ||  Request::is('/closet')) ||
-                            (Request::is('closet-orders') ||  Request::is('/closet/orders')) ||
-                            (Request::is('closet-pim') ||  Request::is('/closet/pim'))
-                        ? 'mm-active' : '' }}">
-                        <li class="{{ (Request::is('closet') ||  Request::is('/closet')) ? 'mm-active' : '' }}">
-                            <a href="{{ URL::to('/closet') }}">
+                        {{  (Request::is('office') ||  Request::is('/office')) ? 'mm-active' : '' }}">
+                        <li class="{{ (Request::is('office') ||  Request::is('/office')) ? 'mm-active' : '' }}">
+                            <a href="{{ URL::to('/office') }}">
                                 <i class="metismenu-icon"></i>
-                                Closet Management
+                                Office Management
                                 <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                             </a>
                             <ul
                             >
-                                <li class="{{ (Request::is('closet') ||  Request::is('/closet')) ? 'mm-active' : '' }}">
-                                    <a href="{{ URL::to('/closet') }}">
+                                <li class="{{ (Request::is('office') ||  Request::is('/office')) ? 'mm-active' : '' }}">
+                                    <a href="{{ URL::to('/office') }}">
                                         <i class="metismenu-icon">
-                                        </i>Closets
+                                        </i>Offices
                                     </a>
                                 </li>
                             </ul>
                         </li>
-                        <li class="{{ (Request::is('customers') ||  Request::is('/customers')) ? 'mm-active' : '' }}">
-                            <a href="{{ URL::to('/customers') }}">
+                        <li class="{{ (Request::is('employees') ||  Request::is('/employees')) ? 'mm-active' : '' }}">
+                            <a href="{{ URL::to('/employees') }}">
                                 <i class="metismenu-icon">
-                                </i>Customers
+                                </i>Employees
                             </a>
                         </li>
                     </ul>

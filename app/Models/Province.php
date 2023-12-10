@@ -126,7 +126,7 @@ class Province extends Model
 
         $provinceId = $address->province_id;
 
-        $existingAddressCount = CustomerAddress::getAddressCountByReferrerId($provinceId, "province_id");
+        $existingAddressCount = EmployeeAddress::getAddressCountByReferrerId($provinceId, "province_id");
         if($existingAddressCount > 0) {
             $data = [
                 'name' => $name,

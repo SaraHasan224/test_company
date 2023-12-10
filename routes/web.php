@@ -5,10 +5,9 @@ use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\RoleController;
 use App\Http\Controllers\Web\UserController;
-use App\Http\Controllers\Web\CustomerController;
-use App\Http\Controllers\Web\Closet\ClosetController;
-use App\Http\Controllers\Web\Closet\OrderController;
-use App\Http\Controllers\Web\Closet\PIMController;
+use App\Http\Controllers\Web\EmployeeController;
+use App\Http\Controllers\Web\OfficeController;
+use App\Http\Controllers\Web\CompanyController;
 
 use App\Http\Controllers\Web\Auth\PasswordController;
 use App\Http\Controllers\Web\Auth\AuthenticatedSessionController;
@@ -47,6 +46,7 @@ Route::get('/clear-cache', function() {
 Route::get('/test-mail', function () {
     Mail::send(new \App\Mail\UserCreated());
 });
+
 Route::get('/get-active-countries/{countryCode?}', [CountryController::class, 'getActiveCountries'])->name('active.countries');
 
 Route::middleware('guest')->group(function () {
@@ -91,9 +91,6 @@ Route::middleware('auth')->group(function () {
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 
     //User Management
-//    Route::resources([
-//        'users' => UserController::class,
-//    ]);
     Route::get('/users', [UserController::class, 'index'])->name('users'); //completed
     Route::get('/users-create', [UserController::class, 'create'])->name('users.create'); //completed
     Route::post('/user-save', [UserController::class, 'store'])->name('users.store'); //completed
@@ -106,27 +103,35 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/roles', [RoleController::class, 'index'])->name('roles');
 
-    Route::get('/customers', [CustomerController::class, 'index'])->name('customers'); //completed
-    Route::get('/customers-list', [CustomerController::class, 'getListingRecord'])->name('customers-list');
-    Route::get('/customers/{id}/edit', [CustomerController::class, 'edit'])->name('customer-edit-form');
-    Route::post('/customer/edit/{id}', [CustomerController::class, 'update'])->name('customer-edit');
-    Route::post('/customers-delete', [CustomerController::class, 'deleteRecords'])->name('customers-delete');
+    Route::get('/employees', [EmployeeController::class, 'index'])->name('employees'); //completed
+    Route::get('/employees-list', [EmployeeController::class, 'getListingRecord'])->name('employees-list');
+    Route::get('/employees-create', [EmployeeController::class, 'add'])->name('employees-add-form');
+    Route::get('/employees-create/{office_ref}', [EmployeeController::class, 'add'])->name('employees-add-form');
+    Route::post('/employees-save', [EmployeeController::class, 'store'])->name('employees.store'); //completed
+    Route::post('/employees-save/{office_ref}', [EmployeeController::class, 'store'])->name('employees.store'); //completed
+    Route::get('/employees/{id}/edit', [EmployeeController::class, 'edit'])->name('customer-edit-form');
+    Route::post('/customer/edit/{id}', [EmployeeController::class, 'update'])->name('customer-edit');
+    Route::post('/employees-delete', [EmployeeController::class, 'deleteRecords'])->name('employees-delete');
 
-    Route::get('/closet', [ClosetController::class, 'index'])->name('closet');
-    Route::get('/closet-list', [ClosetController::class, 'getListingRecord'])->name('closet-list');
-    Route::get('/closet-product-list/{ref}', [ClosetController::class, 'getProductListingRecord'])->name('closet-product-list');
-    Route::get('/closets/{ref}/edit', [ClosetController::class, 'edit'])->name('closet-edit-form');
-    Route::post('/closet/edit/{ref}', [ClosetController::class, 'update'])->name('closet-edit');
-    Route::post('/closet/change-trending-status', [ClosetController::class, 'toggleTrendingStatus'])->name('closet-toggle-status');
-    Route::get('/closet/product/detail/{id}', [ClosetController::class, 'getProductDetail'])->name('closet-product-detail');
-    Route::post('/closet/product/change-status', [ClosetController::class, 'toggleProductStatus'])->name('closet-product-change-status');
-    Route::post('/closet/product/change-featured-status', [ClosetController::class, 'toggleProductFeaturedStatus'])->name('closet-product-change-featured-status');
+    Route::get('/company', [CompanyController::class, 'index'])->name('company'); //completed
+    Route::get('/company-list', [CompanyController::class, 'getListingRecord'])->name('company-list');
+    Route::get('/company/all-offices/{id}', [CompanyController::class, 'getAllCompanyOfficesListingRecord'])->name('company-all-offices-list');
+    Route::get('/company/all-employee/{id}', [CompanyController::class, 'getAllCompanyEmployeesListingRecord'])->name('company-all-employees-list');
+    Route::get('/company-create', [CompanyController::class, 'add'])->name('company-add-form');
+    Route::post('/company-save', [CompanyController::class, 'store'])->name('company.store'); //completed
+    Route::get('/company/{id}/edit', [CompanyController::class, 'edit'])->name('customer-edit-form');
+    Route::post('/customer/edit/{id}', [CompanyController::class, 'update'])->name('customer-edit');
+    Route::post('/company-delete', [CompanyController::class, 'deleteRecords'])->name('company-delete');
 
-    Route::get('/closet/orders', [OrderController::class, 'index'])->name('closet-orders');
-    Route::get('/closet/orders-list', [CustomerController::class, 'getListingRecord'])->name('closet-orders-list');
-
-    Route::get('/closet/pim', [PIMController::class, 'index'])->name('closet-pim');
-    Route::get('/closet/pim-list', [CustomerController::class, 'getListingRecord'])->name('closet-pim-list');
+    Route::get('/office', [OfficeController::class, 'index'])->name('office');
+    Route::get('/office-list', [OfficeController::class, 'getListingRecord'])->name('office-list');
+    Route::get('/office-create', [OfficeController::class, 'add'])->name('office-add-form');
+    Route::get('/office-create/{company_ref}', [OfficeController::class, 'addCompanyOffice'])->name('add-company-office-form');
+    Route::post('/office-save', [OfficeController::class, 'store'])->name('office.store'); //completed
+    Route::post('/office-save/{company_ref}', [OfficeController::class, 'store'])->name('office.store'); //completed
+     Route::get('/office/all-employee/{id}', [OfficeController::class, 'getAllCompanyEmployeesListingRecord'])->name('office-all-employees-list');
+   Route::get('/offices/{ref}/edit', [OfficeController::class, 'edit'])->name('office-edit-form');
+    Route::post('/office/edit/{ref}', [OfficeController::class, 'update'])->name('office-edit');
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

@@ -32,8 +32,8 @@
                                     <div class="widget-content-outer">
                                         <div class="widget-content-wrapper">
                                             <div class="widget-content-left">
-                                                <div class="widget-heading">Customers</div>
-                                                <div class="widget-subheading">Total Customer Count</div>
+                                                <div class="widget-heading">Employees</div>
+                                                <div class="widget-subheading">Total Employee Count</div>
                                             </div>
                                             <div class="widget-content-right">
                                                 <div class="widget-numbers text-primary">{{ $stats['customer_count'] }}</div>
@@ -51,11 +51,11 @@
                                     <div class="widget-content-outer">
                                         <div class="widget-content-wrapper">
                                             <div class="widget-content-left">
-                                                <div class="widget-heading">Closet</div>
-                                                <div class="widget-subheading">Total Closet Count</div>
+                                                <div class="widget-heading">Office</div>
+                                                <div class="widget-subheading">Total Office Count</div>
                                             </div>
                                             <div class="widget-content-right">
-                                                <div class="widget-numbers text-danger">{{$stats['closet_count']}}</div>
+                                                <div class="widget-numbers text-danger">{{$stats['office_count']}}</div>
                                             </div>
                                         </div>
                                     </div>

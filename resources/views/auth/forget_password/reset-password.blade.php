@@ -18,7 +18,7 @@
                             </h4>
                             <div class="mt-5">
                                 <!-- Session Status -->
-                                <x-auth-session-status class="mb-4" :status="session('status')" />
+                                {{--<x-auth-session-status class="mb-4" :status="session('status')" />--}}
                                 <form method="POST" action="{{ route('password.store') }}">
                                     @csrf
                                     <!-- Password Reset Token -->

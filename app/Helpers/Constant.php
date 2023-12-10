@@ -17,8 +17,8 @@ class Constant
     const USER_TYPES = [
         'Super-Admin' => 0,
         'Admin'       => 1,
-        'Closet'      => 2,
-        'Customer'    => 3,
+        'Office'      => 2,
+        'Employee'    => 3,
     ];
     const USER_TYPES_STYLE = [
         0 => "primary",
@@ -84,21 +84,33 @@ class Constant
         2 => "danger",
         1 => "success"
     ];
-    const CLOSET_STATUS = [
+    const COMPANY_STATUS = [
         "enabled" => 1,
         "disabled" => 2
     ];
-    const CLOSET_TRENDING_STATUS = [
-        "No" => 0,
-        "Yes" => 1,
+    const COMPANY_STATUS_STYLE = [
+        2 => "danger",
+        1 => "success"
     ];
-    const CLOSET_TRENDING_STATUS_STYLE = [
-        0 => "secondary",
+    const OFFICE_STATUS = [
+        "enabled" => 1,
+        "disabled" => 2
+    ];
+    const OFFICE_STATUS_STYLE = [
+        2 => "danger",
+        1 => "success"
+    ];
+    const EMPLOYEE_STATUS = [
+        "enabled" => 1,
+        "disabled" => 2
+    ];
+    const EMPLOYEE_STATUS_STYLE = [
+        2 => "danger",
         1 => "primary"
     ];
     const OTP_MODULES = [
         'users'     => 'User',
-        'customers' => 'Customer'
+        'employees' => 'Employee'
     ];
 
     const OTP_EVENTS = [

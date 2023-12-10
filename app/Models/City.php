@@ -126,7 +126,7 @@ class City extends Model
 
         $cityId = $address->city_id;
 
-        $existingAddressCount = CustomerAddress::getAddressCountByReferrerId($cityId, "city_id");
+        $existingAddressCount = EmployeeAddress::getAddressCountByReferrerId($cityId, "city_id");
         if($existingAddressCount > 0) {
             $data = [
                 'name' => $name,

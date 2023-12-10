@@ -23,7 +23,7 @@ class PimProduct extends Model
         'store' => [
             'store_slug' => 'required',
         ],
-        'closet_categories' => [
+        'office_categories' => [
             'store_slug' => 'required|string|exists:merchant_stores,store_slug',
             'category_slug' => 'required|exists:pim_categories,handle'
         ],
@@ -35,11 +35,11 @@ class PimProduct extends Model
         $productId = array_key_exists('product_id', $params) ? $params['product_id'] : [];
         $customerId = array_key_exists('customer_id', $params) ? $params['customer_id'] : [];
         $cartId = array_key_exists('cart_id', $params) ? $params['cart_id'] : [];
-        $closetId = array_key_exists('closet_id', $params) ? $params['closet_id'] : [];
+        $officeId = array_key_exists('office_id', $params) ? $params['office_id'] : [];
         $rules = [
             'add-product' => [
                 "name" => "required|string",
-                'sku'      => 'required|string|'.Rule::unique('pim_products', 'sku')->where('closet_id', $closetId),
+                'sku'      => 'required|string|'.Rule::unique('pim_products', 'sku')->where('office_id', $officeId),
                 "short_description" => "required|string",
                 "price" => 'required|numeric',
                 "discounted_price" => 'required|numeric|lt:price',
@@ -75,7 +75,7 @@ class PimProduct extends Model
                 'filters.price_range' =>  "required",
                 'filters.price_range.min' =>  "nullable",
                 'filters.price_range.max' =>  "nullable",
-                'filters.closet_reference' =>  "nullable",
+                'filters.office_reference' =>  "nullable",
                 'filters.sort_by' =>  "required",
                 'filters.sort_by.featured' =>  "required",
                 'filters.sort_by.newest_arrival' =>  "required",
@@ -169,9 +169,9 @@ class PimProduct extends Model
         return $this->hasMany(PimProductCategory::class, 'product_id', 'id');
     }
 
-    public function closet()
+    public function office()
     {
-        return $this->belongsTo(Closet::class, 'closet_id', 'id');
+        return $this->belongsTo(Office::class, 'office_id', 'id');
     }
 
     public function brand()
@@ -217,9 +217,9 @@ class PimProduct extends Model
         return self::where('handle', $handle)->where('status', Constant::Yes)->first();
     }
 
-    public static function findProductIdsByCloset($closetId)
+    public static function findProductIdsByOffice($officeId)
     {
-        return self::where('closet_id', $closetId)->where('status', Constant::Yes)->get()->pluck('id');
+        return self::where('office_id', $officeId)->where('status', Constant::Yes)->get()->pluck('id');
     }
 
     public static function getProductDetail($productHandle)
@@ -229,7 +229,7 @@ class PimProduct extends Model
             'name',
             'price',
             'handle',
-            'closet_id',
+            'office_id',
             'max_quantity',
             'short_description',
             'shipment_country',
@@ -245,13 +245,13 @@ class PimProduct extends Model
                 'shipmentCountryDetails:id,name',
                 'category',
                 'defaultImage:id,product_id,url,position',
-                'closet' => function($query) {
+                'office' => function($query) {
                     $query->select([
                         'id',
-                        'closet_name',
-                        'closet_reference',
+                        'office_name',
+                        'office_reference',
                         'logo',
-                        'about_closet'
+                        'about_office'
                     ]);
                 },
                 'attribute' => function($query) {
@@ -282,7 +282,7 @@ class PimProduct extends Model
             })
             ->where('pim_products.status', Constant::Yes)->first();
         if(!empty($product)) {
-            $closet = $product->closet;
+            $office = $product->office;
             $defaultImage = PimProductImage::getPlaceholder();
             $product['images'] =  $product->images()->count() == 0 ? [
                 [
@@ -295,11 +295,11 @@ class PimProduct extends Model
             $image = optional(optional($product)->defaultImage)->url;
             $product['discounted_price'] = 0;
             $product['image'] = !empty($image) ? $image : Helper::getProductImagePlaceholder();
-            $product['closet'] = [
-                'name' => $closet->closet_name,
-                'reference' => $closet->closet_reference,
-                'logo' => $closet->logo,
-                'website' => $closet->about_closet,
+            $product['office'] = [
+                'name' => $office->office_name,
+                'reference' => $office->office_reference,
+                'logo' => $office->logo,
+                'website' => $office->about_office,
             ];
             $productVariants = $product->activeVariants;
             $variantAttributes = [];
@@ -463,11 +463,11 @@ class PimProduct extends Model
             $product['attributes'] = $attributes;
 
             unset($product['category']);
-            unset($product['closet_id']);
+            unset($product['office_id']);
             unset($product['defaultImage']);
             unset($product['attribute']);
             unset($product['attributeOption']);
-            unset($product['closet']);
+            unset($product['office']);
             unset($product['activeVariants']);
             unset($product['id']);
         }
@@ -478,7 +478,7 @@ class PimProduct extends Model
     {
         $slug = "";
         $page = array_key_exists('page', $listOptions) ? $listOptions['page'] : 1;
-        $closet = array_key_exists('closet', $listOptions) ? $listOptions['closet'] : [];
+        $office = array_key_exists('office', $listOptions) ? $listOptions['office'] : [];
         $categoryId = array_key_exists('categoryId', $listOptions) ? $listOptions['categoryId'] : [];
         $categoryIds = array_key_exists('categoryIds', $listOptions) ? $listOptions['categoryIds'] : [];
         $customerId = array_key_exists('customer_id', $listOptions) ? $listOptions['customer_id'] : [];
@@ -491,7 +491,7 @@ class PimProduct extends Model
             'pim_products.id as id',
             'name',
             'price',
-            'closet_id',
+            'office_id',
             'brand_id',
             'handle',
             'max_quantity',
@@ -535,11 +535,11 @@ class PimProduct extends Model
 
         $products = $products->with([
             'defaultImage:id,product_id,url,position',
-            'closet' => function ($query) {
+            'office' => function ($query) {
                 $query->select([
                     'id',
-                    'closet_name',
-                    'closet_reference',
+                    'office_name',
+                    'office_reference',
                     'logo',
                     'banner',
                 ])->where('status', Constant::Yes);
@@ -658,8 +658,8 @@ class PimProduct extends Model
                 $filteredProducts->orderBy('featured_position','ASC');
             }
         }
-        else if($listingType == Constant::PJ_PRODUCT_LIST['CLOSET_PRODUCTS'] && !empty($closet)){
-            $products->where('pim_products.closet_id', $closet->id);
+        else if($listingType == Constant::PJ_PRODUCT_LIST['CLOSET_PRODUCTS'] && !empty($office)){
+            $products->where('pim_products.office_id', $office->id);
             if(!empty($categoryId)){
                 $products->whereHas('category', function ($query) use ($categoryId) {
                     $query->where('category_id',$categoryId);
@@ -669,7 +669,7 @@ class PimProduct extends Model
 //            $products->orderBy('rank','ASC');
 
             if($filtersApplied) {
-                $filteredProducts->where('pim_products.closet_id', $closet->id)
+                $filteredProducts->where('pim_products.office_id', $office->id)
                                 ->where('pim_products.is_recommended', Constant::Yes);
                 if(!empty($categoryId)){
                     $filteredProducts->whereHas('category', function ($query) use ($categoryId) {
@@ -678,8 +678,8 @@ class PimProduct extends Model
                 }
                 $filteredProducts->orderBy('recommended_position','DESC');
             }
-        }else if($listingType == Constant::PJ_PRODUCT_LIST['CLOSET_TRENDING_PRODUCTS'] && !empty($closet)){
-            $products->where('pim_products.closet_id', $closet->id);
+        }else if($listingType == Constant::PJ_PRODUCT_LIST['CLOSET_TRENDING_PRODUCTS'] && !empty($office)){
+            $products->where('pim_products.office_id', $office->id);
             if(!empty($categoryId)){
                 $products->whereHas('category', function ($query) use ($categoryId) {
                     $query->where('category_id',$categoryId);
@@ -798,9 +798,9 @@ class PimProduct extends Model
                     'category_id' => !empty($category) && !empty($category->parent) ? $category->parent->id : optional($category)->id,
                     'sub_category_name' => !empty($category) && !empty($category->parent) ? $category->name : null,
                     'sub_category_id' => !empty($category) && !empty($category->parent) ? $category->id : null,
-                    'closet_name' => $item->closet->closet_name,
-                    'closet_slug' => $item->closet->closet_reference,
-                    'closet_favicon' => $item->closet->logo,
+                    'office_name' => $item->office->office_name,
+                    'office_slug' => $item->office->office_reference,
+                    'office_favicon' => $item->office->logo,
                 ];
             })
             ->toArray();
@@ -876,17 +876,17 @@ class PimProduct extends Model
         })->pluck('id');
     }
 
-    public static function getMerchantPimAvailableCategories($closet)
+    public static function getMerchantPimAvailableCategories($office)
     {
         $pimProductIds = PimProduct::where('pim_products.status',Constant::Yes)
-            ->where('closet_id', $closet->id)
+            ->where('office_id', $office->id)
             ->whereHas("activeVariants")
             ->pluck('id')
             ->toArray();
         return PimCategory::select('pim_categories.id', 'name', 'name_ur', 'handle as slug', 'image as banner', 'is_default')
             ->join('pim_product_categories', 'pim_categories.id', 'pim_product_categories.category_id')
             ->whereIn('pim_product_categories.product_id', $pimProductIds)
-            ->where('closet_id', $closet->id)
+            ->where('office_id', $office->id)
             ->where('status', Constant::Yes)
             ->groupBy('pim_product_categories.category_id')
             ->orderBy('position', 'ASC')
@@ -895,15 +895,15 @@ class PimProduct extends Model
     }
 
 
-    public static function deleteProducts($closetId, $product)
+    public static function deleteProducts($officeId, $product)
     {
-        return self::where('closet_id', $closetId)->whereId($product->id)
+        return self::where('office_id', $officeId)->whereId($product->id)
           ->delete();
     }
 
-    public static function isUsedSKU($closetId, $product)
+    public static function isUsedSKU($officeId, $product)
     {
-        return self::where('closet_id', $closetId)
+        return self::where('office_id', $officeId)
           ->where('sku', $product['sku'])
           ->count();
 
@@ -913,7 +913,7 @@ class PimProduct extends Model
     {
         $product = [
           'merchant_id'               => $productData['merchant_id'],
-          'closet_id'                  => $productData['closet_id'],
+          'office_id'                  => $productData['office_id'],
           'name'                      => $productData['name'],
           'name_ur'                   => $productData['name_ur'],
           'short_description'         => $productData['short_description'],
@@ -933,7 +933,7 @@ class PimProduct extends Model
         return self::updateOrCreate(
           [
             'imported_product_id' => $productData['imported_product_id'],
-            'closet_id' => $productData['closet_id']
+            'office_id' => $productData['office_id']
           ],
           $product
         );
@@ -983,7 +983,7 @@ class PimProduct extends Model
         ];
 
         $products = self::select($fields)
-            ->where('closet_id', $ref)
+            ->where('office_id', $ref)
             ->with([
                 'defaultImage:id,product_id,url,position',
                 'category.category.parentBSCategory',
@@ -1078,14 +1078,14 @@ class PimProduct extends Model
         ];
     }
 
-    public static function getClosetListing($perPage = "", $type, $disablePagination = false)
+    public static function getOfficeListing($perPage = "", $type, $disablePagination = false)
     {
         $fields = [
             'id',
             'customer_id',
-            'closet_name',
+            'office_name',
             'logo',
-            'closet_reference',
+            'office_reference',
         ];
         $query = self::select($fields)->where('status', Constant::Yes);
 //
@@ -1096,15 +1096,15 @@ class PimProduct extends Model
 //            $query->where('is_trending', Constant::Yes)
 //                  ->orderBy('trending_position', 'DESC');
         }else {
-            $query->orderBy('closet_name', 'ASC');
+            $query->orderBy('office_name', 'ASC');
 
         }
 
-        $closetList = $query
+        $officeList = $query
             ->whereHas('products')
             ->paginate($perPage);
 
-        $closetTransformed = $closetList
+        $officeTransformed = $officeList
             ->getCollection()
             ->map(function ($item) use($type){
                 if($type == Constant::PJ_CLOSETS_LIST_TYPES['Trending']){
@@ -1116,16 +1116,16 @@ class PimProduct extends Model
                 return $item;
             })->toArray();
         if($disablePagination) {
-            return $closetTransformed;
+            return $officeTransformed;
         }
         return new \Illuminate\Pagination\LengthAwarePaginator(
-            $closetTransformed,
-            $closetList->total(),
-            $closetList->perPage(),
-            $closetList->currentPage(), [
+            $officeTransformed,
+            $officeList->total(),
+            $officeList->perPage(),
+            $officeList->currentPage(), [
                 'path' => \Request::url(),
                 'query' => [
-                    'page' => $closetList->currentPage()
+                    'page' => $officeList->currentPage()
                 ]
             ]
         );

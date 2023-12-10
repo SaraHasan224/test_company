@@ -22,11 +22,11 @@ class PimCategory extends Model
         return $this->hasOne(PimBsCategory::class, 'slug', 'pim_cat_reference');
     }
 
-    public static function addParentPimCategory($closet, $name){
+    public static function addParentPimCategory($office, $name){
         $bsCategory = PimBsCategory::getCategoryBySlug($name);
 
         $category = self::updateOrCreate([
-            'closet_id' => $closet->id,
+            'office_id' => $office->id,
             'parent_id' => Constant::No,
         ], [
             'position' => Constant::Yes,
@@ -34,37 +34,37 @@ class PimCategory extends Model
             'name' => $bsCategory->name,
         ]);
 
-        //Link Closet category to PimBsCategoryMapping
+        //Link Office category to PimBsCategoryMapping
         PimBsCategoryMapping::mapPimCategory($category, $bsCategory);
 
         return $category;
     }
 
-    public static function addChildPimCategory($closet, $parent, $name){
+    public static function addChildPimCategory($office, $parent, $name){
         $bsCategory = PimBsCategory::getCategoryBySlug($name);
 
         $category = self::updateOrCreate([
-            'closet_id' => $closet->id,
+            'office_id' => $office->id,
         ], [
             'position' => Constant::Yes,
             'parent_id' => $parent->id,
             'pim_cat_reference' => $bsCategory->slug,
             'name' => $bsCategory->name,
         ]);
-        //Link Closet category to PimBsCategoryMapping
+        //Link Office category to PimBsCategoryMapping
         PimBsCategoryMapping::mapPimCategory($category, $bsCategory);
         return $category;
     }
 
 
-    public static function getClosetCategory($closetId)
+    public static function getOfficeCategory($officeId)
     {
-        return self::select('name', 'pim_cat_reference', 'image')->where('closet_id', $closetId)->orderBy('position', "ASC")->get()->toArray();
+        return self::select('name', 'pim_cat_reference', 'image')->where('office_id', $officeId)->orderBy('position', "ASC")->get()->toArray();
     }
 
 
-    public static function getClosetCategoryByCategoryRef($catSlug,$closetId)
+    public static function getOfficeCategoryByCategoryRef($catSlug,$officeId)
     {
-        return self::where('closet_id', $closetId)->where('pim_cat_reference', $catSlug)->first();
+        return self::where('office_id', $officeId)->where('pim_cat_reference', $catSlug)->first();
     }
 }

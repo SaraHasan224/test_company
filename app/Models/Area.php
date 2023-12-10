@@ -88,7 +88,7 @@ class Area extends Model
 
         $areaId = $address->area_id;
 
-        $existingAddressCount = CustomerAddress::getAddressCountByReferrerId($areaId, "area_id");
+        $existingAddressCount = EmployeeAddress::getAddressCountByReferrerId($areaId, "area_id");
         if($existingAddressCount > 0) {
             // Save Corresponding City and Area now
             $data = [

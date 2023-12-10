@@ -53,7 +53,7 @@ class Otp extends Model
 
     public static function getOtpByReferenceId($request_id)
     {
-        return self::where('model', Constant::OTP_MODULES['customers'])
+        return self::where('model', Constant::OTP_MODULES['employees'])
             ->where('reference_id', $request_id)
             ->where('is_verified', Constant::No)
             ->where('is_used', Constant::No)
@@ -68,9 +68,9 @@ class Otp extends Model
         Session::put('opt_created_at', Carbon::now());
     }
 
-    public static function getLastOtpSentToCustomer($customer_id, $identifier, $callFrom)
+    public static function getLastOtpSentToEmployee($customer_id, $identifier, $callFrom)
     {
-        return self::where('model', Constant::OTP_MODULES['customers'])
+        return self::where('model', Constant::OTP_MODULES['employees'])
             ->where('order_ref', $identifier)
             ->where('model_id', $customer_id)->latest('created_at')->first();
 
@@ -95,7 +95,7 @@ class Otp extends Model
 
         $agent = new Agent();
         $data = [
-            'model' => Constant::OTP_MODULES['customers'],
+            'model' => Constant::OTP_MODULES['employees'],
             'model_id' => $otpData['customer_id'],
             'reference_id' => $otpData['identifier'],
             'action' => $otpData['action'],
@@ -134,7 +134,7 @@ class Otp extends Model
         ]);
     }
 
-    public static function revokeOldOtpForCustomer($model_id, $model, $ref)
+    public static function revokeOldOtpForEmployee($model_id, $model, $ref)
     {
         self::where('model', $model)
             ->where('model_id', $model_id)
@@ -144,7 +144,7 @@ class Otp extends Model
             })->update(['is_used' => 1]);
     }
 
-    public static function verifyCustomerOtp($identifier, $phoneOtp)
+    public static function verifyEmployeeOtp($identifier, $phoneOtp)
     {
         $userOtp = Otp::getOtpByReferenceId($identifier);
         return self::__verify($userOtp, $phoneOtp);
@@ -173,7 +173,7 @@ class Otp extends Model
     public static function allowOtpReSend($customer_id, $identifier)
     {
         $query = self::where('model_id', $customer_id)
-            ->where('model', Constant::OTP_MODULES['customers'])
+            ->where('model', Constant::OTP_MODULES['employees'])
             ->where('is_verified', Constant::No)
             ->where('reference_id', $identifier);
         $attempts = $query->count();

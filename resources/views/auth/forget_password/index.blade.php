@@ -43,7 +43,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="h-100 d-flex bg-white justify-content-center align-items-center col-md-12 col-lg-8">
+                    <div class="h-100 d-flex bg-white justify-content-center align-items-center col-md-12 col-lg-8 d-none">
                         @csrf
                         <div class="mx-auto app-login-box col-sm-12 col-md-10 col-lg-9">
                             <div class="app-logo"></div>
@@ -55,7 +55,7 @@
                             </span>
                             <div class="mt-5">
                                 <!-- Session Status -->
-                                <x-auth-session-status class="mb-4" :status="session('status')" />
+                                {{--<x-auth-session-status class="mb-4" :status="session('status')" />--}}
                                 <form method="POST" action="{{ route('password.email') }}">
                                     @csrf
                                     <div class="form-row">

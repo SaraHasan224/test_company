@@ -42,7 +42,7 @@ return [
         ],
         'api' => [
             'driver' => 'passport', //update this line
-            'provider' => 'customers',
+            'provider' => 'employees',
         ],
     ],
 
@@ -68,7 +68,7 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-        'customers' => [
+        'employees' => [
             'driver' => 'eloquent',
             'model' => App\Models\Customer::class,
         ],
@@ -105,8 +105,8 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
-        'customers' => [
-            'provider' => 'customers',
+        'employees' => [
+            'provider' => 'employees',
             'table' => 'password_resets',
             'expire' => 60,
         ],

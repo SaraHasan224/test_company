@@ -1,10 +1,10 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Puraani Jeans APIs",
-        "description": "Puraani Jeans API documentation",
+        "title": "RSM APIs",
+        "description": "RSM API documentation",
         "contact": {
-            "email": "developer@puranijeans.com"
+            "email": "developer@rsm.com"
         },
         "license": {
             "name": "Apache 2.0"
@@ -13,7 +13,7 @@
     },
     "servers": [
         {
-            "url": "http://puranijeans.test/",
+            "url": "http://msr-rsm.test/",
             "description": "dev"
         }
     ],
@@ -220,13 +220,13 @@
                 ]
             }
         },
-        "/api/closets": {
+        "/api/offices": {
             "post": {
                 "tags": [
-                    "Closet"
+                    "Office"
                 ],
-                "summary": "Manage Closet",
-                "operationId": "getAllClosets",
+                "summary": "Manage Office",
+                "operationId": "getAllOffices",
                 "responses": {
                     "200": {
                         "description": "Success"
@@ -234,13 +234,13 @@
                 }
             }
         },
-        "/api/closets/trending": {
+        "/api/offices/trending": {
             "post": {
                 "tags": [
-                    "Closet"
+                    "Office"
                 ],
-                "summary": "Manage Closet",
-                "operationId": "getAllTrendingClosets",
+                "summary": "Manage Office",
+                "operationId": "getAllTrendingOffices",
                 "responses": {
                     "200": {
                         "description": "Success"
@@ -248,13 +248,13 @@
                 }
             }
         },
-        "/api/closet/{reference}": {
+        "/api/office/{reference}": {
             "post": {
                 "tags": [
-                    "Closet"
+                    "Office"
                 ],
-                "summary": "get closet details",
-                "operationId": "getClosetDetails",
+                "summary": "get office details",
+                "operationId": "getOfficeDetails",
                 "responses": {
                     "200": {
                         "description": "Success"
@@ -262,15 +262,15 @@
                 }
             }
         },
-        "/api/closet/image-upload": {
+        "/api/office/image-upload": {
             "post": {
                 "tags": [
-                    "Closet"
+                    "Office"
                 ],
-                "summary": "Closet Icon and Banner Avatar",
+                "summary": "Office Icon and Banner Avatar",
                 "operationId": "imageUpload",
                 "requestBody": {
-                    "description": "Icon and Banner Upload for a Closet",
+                    "description": "Icon and Banner Upload for a Office",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -298,12 +298,12 @@
                 }
             }
         },
-        "/api/closet/{slug}/category/{catSlug}": {
+        "/api/office/{slug}/category/{catSlug}": {
             "get": {
                 "tags": [
-                    "Closet"
+                    "Office"
                 ],
-                "summary": "Manage Closet Category Products",
+                "summary": "Manage Office Category Products",
                 "operationId": "getStoreCategories",
                 "parameters": [
                     {
@@ -332,13 +332,13 @@
                 }
             }
         },
-        "/api/filter/closet/{slug}/product": {
+        "/api/filter/office/{slug}/product": {
             "post": {
                 "tags": [
-                    "Closet"
+                    "Office"
                 ],
                 "summary": "Store Products",
-                "operationId": "getFilteredClosetProducts",
+                "operationId": "getFilteredOfficeProducts",
                 "parameters": [
                     {
                         "name": "slug",
@@ -380,13 +380,13 @@
                 ]
             }
         },
-        "/api/closet/{slug}/product": {
+        "/api/office/{slug}/product": {
             "get": {
                 "tags": [
-                    "Closet"
+                    "Office"
                 ],
                 "summary": "Store Products",
-                "operationId": "getClosetProducts",
+                "operationId": "getOfficeProducts",
                 "parameters": [
                     {
                         "name": "slug",
@@ -411,13 +411,13 @@
                 ]
             }
         },
-        "/api/closet/{slug}/category/{catSlug}/product": {
+        "/api/office/{slug}/category/{catSlug}/product": {
             "get": {
                 "tags": [
-                    "Closet"
+                    "Office"
                 ],
-                "summary": "Manage Closet Category Products",
-                "operationId": "getClosetCategoryProducts",
+                "summary": "Manage Office Category Products",
+                "operationId": "getOfficeCategoryProducts",
                 "parameters": [
                     {
                         "name": "slug",
@@ -451,15 +451,15 @@
                 ]
             }
         },
-        "/api/closet/create": {
+        "/api/office/create": {
             "post": {
                 "tags": [
-                    "Closet"
+                    "Office"
                 ],
-                "summary": "create closet",
-                "operationId": "createCloset",
+                "summary": "create office",
+                "operationId": "createOffice",
                 "requestBody": {
-                    "description": "create closet",
+                    "description": "create office",
                     "content": {
                         "application/json": {
                             "schema": {

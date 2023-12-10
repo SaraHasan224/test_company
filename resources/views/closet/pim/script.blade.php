@@ -1,3 +1,0 @@
-@section('scripts')
-
-@endsection
